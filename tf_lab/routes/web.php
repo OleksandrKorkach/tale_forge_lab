@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\LabController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('main');
+})->name('main')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,5 +28,7 @@ Route::get('books/{book}/page/{page}', [BookController::class, 'showPage'])->nam
 
 Route::post('books/{book}/page/{page}', [BookController::class, 'addBlockToPage'])->name('books.add.block');
 Route::delete('/blocks/{block}', [BookController::class, 'destroyPageBlock'])->name('book.page.destroy');
+
+Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 
 require __DIR__.'/auth.php';

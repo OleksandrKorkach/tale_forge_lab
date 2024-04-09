@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\book;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class BookPage extends Model
+class Page extends Model
 {
     use HasFactory;
 
-    protected $table = 'books_pages';
+    protected $table = 'pages';
 
     public function book(): BelongsTo
     {
@@ -20,6 +20,6 @@ class BookPage extends Model
 
     public function blocks(): HasMany
     {
-        return $this->hasMany(BookPageBlock::class);
+        return $this->hasMany(PageBlock::class);
     }
 }

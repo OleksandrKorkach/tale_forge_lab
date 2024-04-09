@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\book;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class BookPageBlock extends Model
+class PageBlock extends Model
 {
-    protected $table = 'books_pages_blocks';
+    protected $table = 'page_blocks';
 
     use HasFactory;
 
     protected $fillable = [
         'content',
-        'block_type'
+        'block_type',
+        'page_id'
     ];
 
-    public function bookPage(): BelongsTo
+    public function page(): BelongsTo
     {
-        return $this->belongsTo(BookPage::class);
+        return $this->belongsTo(Page::class);
     }
 }

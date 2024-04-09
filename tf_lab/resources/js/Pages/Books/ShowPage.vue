@@ -1,65 +1,68 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import {Head} from '@inertiajs/vue3';
 import TextInput from "@/Components/TextInput.vue";
-
 </script>
 
 <template>
+    <Head title="Books" />
+
     <AuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <h1>Book Reader</h1>
-                    <div class="flex justify-center mt-4">
-                        <div id="page" class="rounded-md border-indigo-400 border-4 w-[60%] h-[800px] flex flex-col">
+                    <div class="flex justify-center">
+                        <div id="bookPage" class="border-2 border-black flex flex-col h-[750px] w-7/12">
+
                             <template v-for="(block, index) in blocks" :key="index">
-                                <button @click="showPopup" :id="`addBeforeButton${block.id}`" class="add-block-before-button px-4 py-2 hidden flex-grow border-b-2 border-black items-center justify-center">
-                                    Add block
-                                </button>
-                                <div class="flex">
-                                    <div class="w-10/12">
-                                        <div class="break-words px-4 py-2 border-b-2 border-r-2 border-black">
+                                <div :id="`pageBlock${block.id}`" class="flex flex-col border-b-2 border-black">
+                                    <div :id="`beforeInputBlock${block.id}`" class="flex hidden border-b-2 border-black">
+                                        <div :id="`beforeInputContent${block.id}`" contenteditable="true" type="text" class="w-10/12 border-r-2 border-black"></div>
+                                        <div class="w-2/12 flex justify-center items-center">
+                                            <button type="submit" :form="`beforeInputForm${block.id}`" class="bg-blue-300 hover:bg-blue-400 py-1 px-3 rounded-md">
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button :id="`addBeforeButton${block.id}`" @click="showPopup" class="add-block-button hidden bg-blue-200 flex-grow">
+                                        Add before block
+                                    </button>
+
+                                    <div class="flex">
+                                        <div class="break-words w-10/12 p-2">
                                             {{ block.content }}
                                         </div>
-                                    </div>
-
-                                    <div class="flex flex-col items-center w-2/12 border-b-2 border-black justify-center">
-                                        <div>
-                                            <button  @click="showAddBlockBefore(block.id)">Add Before</button>
-                                        </div>
-                                        <div>
-                                            <button>Save</button>
-                                        </div>
-                                        <div>
-                                            <button @click="deleteBlock(block.id)">Delete</button>
+                                        <div class="flex-col flex w-2/12 justify-center">
+                                            <button @click="showAddBlockBeforeButton(block.id)">add before</button>
+                                            <button @click="deleteBlock(block.id)">delete</button>
                                         </div>
                                     </div>
                                 </div>
+                                <form :id="`beforeInputForm${block.id}`" @submit.prevent="storeBlock(block.id)">
+                                    <text-input :loading="form.processing" type="hidden" name="content" v-model="form.content" />
+                                </form>
                             </template>
 
-                            <button v-if="!showInput" id="addLowerButton" @click="showPopup" class="flex-grow items-center justify-center">
-                                Add lower block
-                            </button>
-
-                            <form v-else id="lowerInputForm" @submit.prevent="storeBlock" >
-                                <div class="flex">
-                                    <div id="lowerInput"
-                                         @input="updateContent"
-                                         class="flex-grow break-words overflow-y-hidden w-10/12 px-4 py-2 border-r-2 border-black"
-                                         contenteditable="true"
-                                         ref="editableBlock">
-                                    </div>
-                                    <text-input :loading="form.processing" type="hidden" name="content" v-model="form.content" />
-                                    <div class="flex flex-col items-center w-2/12 border-b-2 border-black justify-center">
-                                        <button class="bg-blue-300 p-1 px-3 rounded hover:bg-blue-400" type="submit">
-                                            Save
-                                        </button>
-                                    </div>
+                            <div id="bottomInputBlock" class="flex hidden flex-grow ">
+                                <div id="bottomInputContent" ref="bottomInputBlock" contenteditable="true" @input="updateContent" type="text" class="w-10/12 border-r-2 border-black"></div>
+                                <div class="w-2/12 flex justify-center items-center">
+                                    <button type="submit" form="bottomInputForm" class="bg-blue-300 hover:bg-blue-400 py-1 px-3 rounded-md">
+                                        Save
+                                    </button>
                                 </div>
+                            </div>
+
+                            <form id="bottomInputForm" @submit.prevent="storeBlock(null)">
+                                <text-input :loading="form.processing" type="hidden" name="content" v-model="form.content" />
                             </form>
 
+                            <button id="addBottomBlockButton" @click="showPopup" class="hidden add-block-button bg-blue-200 flex-grow">
+                                Add bottom block
+                            </button>
 
-                            <div id="popup" @click="handlePopupClick" class="hidden flex absolute bg-white border border-gray-300 rounded shadow">
+
+                            <div id="popup" @click="handlePopup" class="hidden absolute bg-white border border-gray-300 rounded shadow">
                                 <button class="popup-btn hover:bg-gray-200 p-2">Text</button>
                                 <button class="popup-btn hover:bg-gray-200 p-2">Image</button>
                                 <button class="popup-btn hover:bg-gray-200 p-2">Header</button>
@@ -80,119 +83,131 @@ export default {
     },
     data() {
         return {
-            showInput: false,
-            showBeforeBlockInput: false,
+            activeInputId: null,
+            activeBlockButtonId: null,
             maxInputHeight: 100,
+            content: '',
+            currentPopupTargetId: null,
             form: this.$inertia.form({
                 content: null,
             }),
         }
     },
     mounted() {
-        this.stretchButton('addLowerButton');
+        this.activeBlockButtonId = 'addBottomBlockButton';
+        const activeBlock = document.getElementById(this.activeBlockButtonId);
+        // if (this.calculateAvailableSpace(document.getElementById('bookPage')) > 100) {
+        //     activeBlock.classList.remove('hidden');
+        // }
+        activeBlock.classList.remove('hidden');
         window.addEventListener('click', this.handleWindowClick);
     },
-    beforeUnmount() {
-        window.removeEventListener('click', this.handleWindowClick);
-
-        const popup = document.getElementById('popup');
-        if (popup) {
-            popup.removeEventListener('click', this.handlePopupClick);
-        }
-    },
-
     methods: {
-        handleWindowClick(event) {
-            const popup = document.getElementById('popup');
-            if (event.target.closest('#addLowerButton') || event.target.closest('#popup') || event.target.classList.contains('add-block-before-button')) {
+        showAddBlockBeforeButton(blockId) {
+            const addBeforeButton = document.getElementById('addBeforeButton' + blockId);
+            if (this.activeInputId !== null) {
+                const activeInput = document.getElementById(this.activeInputId);
+                activeInput.classList.add('hidden');
+                this.activeInputId = null;
+            }
+            if (addBeforeButton.id === this.activeBlockButtonId) {
+                this.activeBlockButtonId = 'addBottomBlockButton';
+                addBeforeButton.classList.add('hidden');
+                const addBottomBlockButton = document.getElementById('addBottomBlockButton');
+
+                this.stretchButton(addBottomBlockButton.id);
+                addBottomBlockButton.classList.remove('hidden');
                 return;
             }
-            popup.classList.add('hidden');
-        },
-        stretchButton(buttonId) {
-            const page = document.getElementById('page');
-            const addButton = document.getElementById(buttonId);
-
-            const containerHeight = page.clientHeight;
-            let totalChildrenHeight = 0;
-            Array.from(page.children).forEach(child => {
-                if (child.id !== buttonId) {
-                    totalChildrenHeight += child.offsetHeight;
-                }
+            this.activeBlockButtonId = 'addBeforeButton' + blockId;
+            document.querySelectorAll('.add-block-button').forEach(button => {
+                if (button.id !== addBeforeButton.id)
+                    button.classList.add('hidden');
             });
-
-            const availableSpace = containerHeight - totalChildrenHeight;
-            addButton.style.display = availableSpace > 100 ? "flex" : "none";
+            this.stretchButton(addBeforeButton.id);
+            addBeforeButton.classList.remove('hidden');
+            // console.log(addBeforeButton.style.height);
         },
         showPopup(event) {
+            this.currentPopupTargetId = event.target.id;
+
             const popup = document.getElementById('popup');
             popup.style.left = event.pageX + 'px';
             popup.style.top = event.pageY + 'px';
             popup.classList.remove('hidden');
         },
-        showAddBlockBefore(blockId) {
-            const addBeforeButton = document.getElementById('addBeforeButton' + blockId);
-            const addLowerButton = document.getElementById('addLowerButton');
-            document.querySelectorAll('.add-block-before-button').forEach(button => {
-                button.style.display = 'none';
-            });
+        handlePopup(event) {
+            if (event.target.textContent === 'Text') {
+                const popup = document.getElementById('popup');
+                popup.classList.add('hidden');
+                const activeBlockButton = document.getElementById(this.activeBlockButtonId);
+                this.activeBlockButtonId = null;
+                activeBlockButton.classList.add('hidden');
+                if (activeBlockButton.id === 'addBottomBlockButton') {
+                    this.activeInputId = 'bottomInputBlock';
+                    const activeInput = document.getElementById('bottomInputBlock');
+                    activeInput.classList.remove('hidden');
+                } else {
+                    const inputId = activeBlockButton.id.match(/addBeforeButton(\d+)/)[1];
+                    this.activeInputId = 'beforeInputBlock' + inputId;
+                    const activeInput = document.getElementById('beforeInputBlock' + inputId);
+                    this.stretchButton(activeInput.id);
+                    activeInput.classList.remove('hidden');
+                }
+            }
+        },
+        handleWindowClick(event) {
+            const popup = document.getElementById('popup');
+            if (event.target.classList.contains('add-block-button')) {
+                return;
+            }
+            popup.classList.add('hidden');
+        },
+        stretchButton(buttonId) {
+            const bookPage = document.getElementById('bookPage');
+            const button = document.getElementById(buttonId);
 
-            addBeforeButton.style.display = 'flex';
-
-            addLowerButton.style.display = 'none';
-
-            const page = document.getElementById('page');
-            const containerHeight = page.clientHeight;
+            const availableSpace = this.calculateAvailableSpace(bookPage);
+            button.style.height = `${availableSpace}px`;
+            button.style.maxHeight = `${availableSpace}px`;
+        },
+        calculateAvailableSpace(container) {
+            const containerHeight = container.clientHeight;
 
             let totalChildrenHeight = 0;
-            Array.from(page.children).forEach(child => {
-                if (child.id !== 'addLowerButton') {
-                    totalChildrenHeight += child.offsetHeight;
-                }
+            Array.from(container.children).forEach(child => {
+                totalChildrenHeight += child.offsetHeight;
             });
-            const availableSpace = containerHeight - totalChildrenHeight;
-            addBeforeButton.style.height = availableSpace + 'px';
 
-            addBeforeButton.classList.remove('hidden');
-        },
-        handlePopupClick() {
-            if (event.target.textContent === 'Text') {
-                const addButton = document.getElementById('addLowerButton');
-                const addButtonHeight = addButton.offsetHeight;
-                this.showInput = true;
-
-                this.$nextTick(() => {
-                    const lowerInput = document.getElementById('lowerInput');
-                    lowerInput.style.height = addButtonHeight + "px";
-                    lowerInput.style.maxHeight = addButtonHeight + "px";
-                    this.maxInputHeight = addButtonHeight;
-                    lowerInput.focus();
-                    lowerInput.addEventListener('input', this.checkHeight);
-
-                });
-                document.getElementById('popup').classList.add('hidden');
-            }
-        },
-        checkHeight() {
-            const block = this.$refs.editableBlock;
-            if (block.scrollHeight > this.maxInputHeight) {
-                let content = block.innerText;
-                while (block.scrollHeight > this.maxInputHeight && content.length > 0) {
-                    content = content.substring(0, content.length - 1);
-                    block.innerText = content;
-
-                    const range = document.createRange();
-                    const sel = window.getSelection();
-                    range.selectNodeContents(block);
-                    range.collapse(false);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-            }
+            return containerHeight - totalChildrenHeight;
         },
         updateContent() {
-            this.content = this.$refs.editableBlock.innerText;
+            this.content = document.getElementById('bottomInputField').innerText;
         },
+        storeBlock(blockId = null) {
+            let inputBlock;
+            if (blockId) {
+                inputBlock = document.getElementById('beforeInputContent' + blockId);
+            } else {
+                inputBlock = document.getElementById('bottomInputContent');
+            }
+
+            this.content = inputBlock.innerText;
+
+            const { bookId, pageId } = this.parsePath();
+            const url = `/books/${bookId}/page/${pageId}`;
+            this.$inertia.post(url, { content: this.content }, {
+                onSuccess: () => window.location.reload()
+            });
+        },
+        // storeBlock(blockId) {
+        //     const content = blockId ? this.form.content : this.content;
+        //     const url = `/books/${bookId}/page/${pageId}`;
+        //
+        //     this.$inertia.post(url, { content: content }, {
+        //         onSuccess: () => window.location.reload()
+        //     });
+        // },
         parsePath() {
             const path = window.location.pathname;
             const parts = path.split('/');
@@ -201,20 +216,182 @@ export default {
 
             return { bookId, pageId };
         },
-        storeBlock() {
-            const { bookId, pageId } = this.parsePath();
-            const url = `/books/${bookId}/page/${pageId}`;
-
-            this.checkHeight();
-            this.$inertia.post(url, { content: this.content }, {
-                onSuccess: () => window.location.reload()
-            });
-        },
         deleteBlock(blockId) {
             this.$inertia.delete(`/blocks/${blockId}`, {
                 onSuccess: () => window.location.reload()
             });
         },
-    },
+    }
 }
+
 </script>
+
+<!--<script>-->
+<!--export default {-->
+<!--    props: {-->
+<!--        book: Object,-->
+<!--        blocks: Array,-->
+<!--    },-->
+<!--    data() {-->
+<!--        return {-->
+<!--            showLowerInput: false,-->
+<!--            showBeforeInput: false,-->
+<!--            activeInputId: null,-->
+<!--            maxInputHeight: 100,-->
+<!--            currentPopupTargetId: null,-->
+<!--            form: this.$inertia.form({-->
+<!--                content: null,-->
+<!--            }),-->
+<!--        }-->
+<!--    },-->
+<!--    mounted() {-->
+<!--        this.stretchButton('addLowerButton');-->
+<!--        window.addEventListener('click', this.handleWindowClick);-->
+<!--    },-->
+<!--    beforeUnmount() {-->
+<!--        window.removeEventListener('click', this.handleWindowClick);-->
+
+<!--        const popup = document.getElementById('popup');-->
+<!--        if (popup) {-->
+<!--            popup.removeEventListener('click', this.handlePopupClick);-->
+<!--        }-->
+<!--    },-->
+
+<!--    methods: {-->
+<!--        handleWindowClick(event) {-->
+<!--            const popup = document.getElementById('popup');-->
+<!--            if (event.target.closest('#addLowerButton') || event.target.closest('#popup') || event.target.classList.contains('add-block-before-button')) {-->
+<!--                return;-->
+<!--            }-->
+<!--            popup.classList.add('hidden');-->
+<!--        },-->
+<!--        stretchButton(buttonId) {-->
+<!--            const page = document.getElementById('page');-->
+<!--            const addButton = document.getElementById(buttonId);-->
+
+<!--            const containerHeight = page.clientHeight;-->
+<!--            let totalChildrenHeight = 0;-->
+<!--            Array.from(page.children).forEach(child => {-->
+<!--                if (child.id !== buttonId) {-->
+<!--                    totalChildrenHeight += child.offsetHeight;-->
+<!--                }-->
+<!--            });-->
+
+<!--            const availableSpace = containerHeight - totalChildrenHeight;-->
+<!--            addButton.style.display = availableSpace > 100 ? "flex" : "none";-->
+<!--        },-->
+<!--        showPopup(event) {-->
+<!--            this.currentPopupTargetId = event.target.id;-->
+
+<!--            const popup = document.getElementById('popup');-->
+<!--            popup.style.left = event.pageX + 'px';-->
+<!--            popup.style.top = event.pageY + 'px';-->
+<!--            popup.classList.remove('hidden');-->
+<!--        },-->
+<!--        showAddBlockBefore(blockId) {-->
+<!--            this.activeInputId = blockId;-->
+<!--            const addBeforeButton = document.getElementById('addBeforeButton' + blockId);-->
+<!--            const addLowerButton = document.getElementById('addLowerButton');-->
+<!--            document.querySelectorAll('.add-block-before-button').forEach(button => {-->
+<!--                button.style.display = 'none';-->
+<!--            });-->
+
+<!--            addBeforeButton.style.display = 'flex';-->
+
+<!--            addLowerButton.style.display = 'none';-->
+
+<!--            const page = document.getElementById('page');-->
+<!--            const containerHeight = page.clientHeight;-->
+
+<!--            let totalChildrenHeight = 0;-->
+<!--            Array.from(page.children).forEach(child => {-->
+<!--                if (child.id !== 'addLowerButton') {-->
+<!--                    totalChildrenHeight += child.offsetHeight;-->
+<!--                }-->
+<!--            });-->
+<!--            const availableSpace = containerHeight - totalChildrenHeight;-->
+<!--            addBeforeButton.style.height = availableSpace + 'px';-->
+
+<!--            addBeforeButton.classList.remove('hidden');-->
+<!--        },-->
+<!--        handlePopupClick(event) {-->
+<!--            if (event.target.textContent === 'Text') {-->
+<!--                this.activeInputId = this.currentPopupTargetId.includes('addBeforeButton') ? this.currentPopupTargetId.replace('addBeforeButton', '') : 'lower';-->
+<!--                let button;-->
+<!--                let input;-->
+<!--                let buttonHeight;-->
+
+<!--                if (this.currentPopupTargetId === 'addLowerButton') {-->
+<!--                    this.showLowerInput = true;-->
+<!--                    button = document.getElementById('addLowerButton');-->
+<!--                    buttonHeight = button.offsetHeight;-->
+<!--                    input = document.getElementById('lowerInput');-->
+
+<!--                } else if (this.currentPopupTargetId.startsWith('addBeforeButton')) {-->
+<!--                    this.showBeforeInput = true;-->
+<!--                    button = document.getElementById(this.currentPopupTargetId);-->
+<!--                    const blockId = this.currentPopupTargetId.replace('addBeforeButton', '');-->
+<!--                    buttonHeight = button.offsetHeight;-->
+<!--                    input = document.getElementById('beforeInput' + blockId);-->
+
+<!--                } else {-->
+<!--                    return;-->
+<!--                }-->
+<!--                // buttonHeight = button.offsetHeight;-->
+
+<!--                this.$nextTick(() => {-->
+<!--                    input.style.height = buttonHeight + "px";-->
+<!--                    input.style.maxHeight = buttonHeight + "px";-->
+<!--                    this.maxInputHeight = buttonHeight;-->
+<!--                    input.focus();-->
+<!--                    input.addEventListener('input', this.checkHeight);-->
+
+<!--                });-->
+<!--                document.getElementById('popup').classList.add('hidden');-->
+<!--            }-->
+<!--        },-->
+<!--        checkHeight() {-->
+<!--            const block = this.$refs.editableBlock;-->
+<!--            if (block.scrollHeight > this.maxInputHeight) {-->
+<!--                let content = block.innerText;-->
+<!--                while (block.scrollHeight > this.maxInputHeight && content.length > 0) {-->
+<!--                    content = content.substring(0, content.length - 1);-->
+<!--                    block.innerText = content;-->
+
+<!--                    const range = document.createRange();-->
+<!--                    const sel = window.getSelection();-->
+<!--                    range.selectNodeContents(block);-->
+<!--                    range.collapse(false);-->
+<!--                    sel.removeAllRanges();-->
+<!--                    sel.addRange(range);-->
+<!--                }-->
+<!--            }-->
+<!--        },-->
+<!--        updateContent() {-->
+<!--            this.content = this.$refs.editableBlock.innerText;-->
+<!--        },-->
+<!--        parsePath() {-->
+<!--            const path = window.location.pathname;-->
+<!--            const parts = path.split('/');-->
+<!--            const bookId = parts[2];-->
+<!--            const pageId = parts[4];-->
+
+<!--            return { bookId, pageId };-->
+<!--        },-->
+<!--        storeBlock() {-->
+<!--            const { bookId, pageId } = this.parsePath();-->
+<!--            const url = `/books/${bookId}/page/${pageId}`;-->
+
+<!--            this.checkHeight();-->
+<!--            this.$inertia.post(url, { content: this.content }, {-->
+<!--                onSuccess: () => window.location.reload()-->
+<!--            });-->
+<!--        },-->
+<!--        deleteBlock(blockId) {-->
+<!--            this.$inertia.delete(`/blocks/${blockId}`, {-->
+<!--                onSuccess: () => window.location.reload()-->
+<!--            });-->
+<!--        },-->
+<!--    },-->
+<!--}-->
+<!--</script>-->

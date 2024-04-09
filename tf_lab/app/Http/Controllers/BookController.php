@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
-use App\Models\BookPageBlock;
+use App\Models\book\Book;
+use App\Services\BookService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class BookController extends Controller
 {
+    private BookService $bookService;
+
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
+
     public function index(): Response
     {
         $books = Book::all();
@@ -22,7 +30,8 @@ class BookController extends Controller
 
     public function show($id): Response
     {
-        $book = Book::findOrFail($id);
+        $book = $this->bookService->getBook($id);
+
         return Inertia::render('Books/Show', [
             'book' => $book,
         ]);
@@ -30,38 +39,24 @@ class BookController extends Controller
 
     public function showPage($book, $page): Response
     {
-        $book = Book::query()->findOrFail($book);
-        $page = $book->pages->where('sequence', $page)->first();
-        $blocks = $page->blocks;
+        $bookModel = $this->bookService->getBook($book);
+        $blocks = $this->bookService->getPageBlocks($book, $page);
+
         return Inertia::render('Books/ShowPage', [
-            'book' => $book,
+            'book' => $bookModel,
             'blocks' => $blocks,
         ]);
     }
 
     public function addBlockToPage(Request $request, $book, $page): RedirectResponse
     {
-        $bookModel = Book::query()->findOrFail($book);
-        $pageModel = $bookModel->pages->where('sequence', $page)->firstOrFail();
-
-        $block = new BookPageBlock();
-        $block->content = $request->input('content');
-        $block->book_page_id = $pageModel->id;
-        $block->sequence = 4;
-        $block->block_type = 'text';
-        $block->created_at = now();
-        $block->updated_at = now();
-
-        $block->save();
-
+        $this->bookService->storeBlock($request, $book, $page);
         return Redirect::back();
     }
 
     public function destroyPageBlock($block): RedirectResponse
     {
-        $blockModel = BookPageBlock::findOrFail($block);
-        $blockModel->delete();
-
+        $this->bookService->deleteBlock($block);
         return Redirect::back();
     }
 }

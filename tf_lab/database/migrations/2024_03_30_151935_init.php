@@ -12,13 +12,22 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->string('author_name');
+            $table->string('season')->nullable();
+            $table->integer('year')->nullable();
+            $table->string('language')->nullable();
+            $table->integer('pages')->default(0);
+            $table->string('age_rating')->nullable();
+            $table->float('community_rating')->nullable();
             $table->unsignedBigInteger('user_id');
+
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
         });
 
-        Schema::create('books_pages', function (Blueprint $table) {
+        Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('book_id');
             $table->integer('sequence')->default(0);
@@ -27,22 +36,22 @@ return new class extends Migration
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
         });
 
-        Schema::create('books_pages_blocks', function (Blueprint $table) {
+        Schema::create('page_blocks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('page_id');
-            $table->string('block_type'); // Например, 'text', 'image', 'header'
-            $table->text('content')->nullable(); // Содержимое блока, для изображений это может быть ссылка
-            $table->integer('sequence')->default(0); // Порядок блока на странице
+            $table->string('block_type');
+            $table->text('content')->nullable();
+            $table->integer('sequence')->default(0);
             $table->timestamps();
 
-            $table->foreign('page_id')->references('id')->on('books_pages')->onDelete('cascade');
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('books_pages_blocks');
-        Schema::dropIfExists('pages_blocks');
+        Schema::dropIfExists('page_blocks');
+        Schema::dropIfExists('pages');
         Schema::dropIfExists('books');
     }
 };

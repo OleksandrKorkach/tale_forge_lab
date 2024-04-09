@@ -11,7 +11,7 @@ import { Link } from '@inertiajs/vue3';
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow sm:rounded-lg flex flex-wrap">
-                    <template v-for="(book, index) in books" :key="index">
+                    <template v-for="(book, index) in books" :key="Index">
                         <div class="w-[25%] border-white border-4 bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
                             <Link :href="`/books/${book.id}`">
                                 <img src="/images/tf_lab_logo.webp"  alt="Logo" />

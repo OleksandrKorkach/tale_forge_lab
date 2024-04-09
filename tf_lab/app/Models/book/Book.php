@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\book;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,11 +18,18 @@ class Book extends Model
         'title',
         'description',
         'author_name',
+        'season',
+        'year',
+        'language',
+        'quote',
+        'author_name',
+        'pages',
+        'age_rating',
     ];
 
     public function pages(): HasMany
     {
-        return $this->hasMany(BookPage::class);
+        return $this->hasMany(Page::class);
     }
 
     public function user(): BelongsTo
