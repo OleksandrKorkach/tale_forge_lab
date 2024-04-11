@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->text('quote');
             $table->string('author_name');
             $table->string('season')->nullable();
             $table->integer('year')->nullable();
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->integer('pages')->default(0);
             $table->string('age_rating')->nullable();
             $table->float('community_rating')->nullable();
+            $table->boolean('is_published')->default(false);
             $table->unsignedBigInteger('user_id');
 
             $table->timestamp('published_at')->nullable();

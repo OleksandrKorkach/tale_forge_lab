@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
 use App\Http\Controllers\ProfileController;
+use App\Services\BookCommentService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,9 +28,13 @@ Route::get('books', [BookController::class, 'index'])->name('books.index');
 Route::get('books/{book}', [BookController::class, 'show'])->name('books.show');
 Route::get('books/{book}/page/{page}', [BookController::class, 'showPage'])->name('books.show.page');
 
+Route::post('books/{book}/comments', [BookCommentService::class, 'storeComment'])->name('books.comment.store');
+
 Route::post('books/{book}/page/{page}', [BookController::class, 'addBlockToPage'])->name('books.add.block');
 Route::delete('/blocks/{block}', [BookController::class, 'destroyPageBlock'])->name('book.page.destroy');
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
+
+Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
 
 require __DIR__.'/auth.php';

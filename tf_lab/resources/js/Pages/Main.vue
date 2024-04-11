@@ -5,9 +5,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 <template>
     <AuthenticatedLayout>
-<!--        <div class="py-8">-->
-<!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">-->
-<!--                <div class="p-4 flex bg-white shadow sm:rounded-lg justify-center">-->
+
+        <div class="py-8">
+            <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                <div class="p-8 flex bg-white shadow sm:rounded-lg">
+                    Most Popular
 <!--                    <div id="book_page" class="border-indigo-400 border-2 w-1/2 h-[700px] flex flex-col">-->
 <!--                        <div class="bg-red-200 px-4 pt-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur atque deleniti eaque modi quidem quod rem reprehenderit rerum sint!</div>-->
 <!--                        <div class="bg-red-200 px-4 pt-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur atque deleniti eaque modi quidem quod rem reprehenderit rerum sint!</div>-->
@@ -23,9 +25,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 <!--                            <button class="popup-btn hover:bg-gray-200 p-2">Header</button>-->
 <!--                        </div>-->
 <!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+                </div>
+            </div>
+        </div>
     </AuthenticatedLayout>
 </template>
 

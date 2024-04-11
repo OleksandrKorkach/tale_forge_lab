@@ -14,6 +14,11 @@ class BookService
         return Book::findOrFail($id);
     }
 
+    public function getBookGenres()
+    {
+
+    }
+
     public function getPage($bookId, $pageId): Page
     {
         return Page::where('book_id', $bookId)
@@ -44,6 +49,5 @@ class BookService
         $blockModel = PageBlock::findOrFail($block);
         $blockModel->delete();
     }
-
 
 }

@@ -35,8 +35,8 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('books.index')" :active="route().current('books.index')">
                                     Catalog
                                 </NavLink>
-                                <NavLink :href="route('books.index')" :active="route().current('books.index')">
-                                    Communities
+                                <NavLink :href="route('groups.index')" :active="route().current('groups.index')">
+                                    Groups
                                 </NavLink>
                                 <NavLink :href="route('lab.index')" :active="route().current('lab.index')">
                                     Laboratory

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\book\Book;
+use App\Services\BookCommentService;
 use App\Services\BookService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,10 +14,12 @@ use Inertia\Response;
 class BookController extends Controller
 {
     private BookService $bookService;
+    private BookCommentService $bookCommentService;
 
-    public function __construct(BookService $bookService)
+    public function __construct(BookService $bookService, BookCommentService $bookCommentService)
     {
         $this->bookService = $bookService;
+        $this->bookCommentService = $bookCommentService;
     }
 
 
@@ -31,9 +34,12 @@ class BookController extends Controller
     public function show($id): Response
     {
         $book = $this->bookService->getBook($id);
-
+        $comments = $this->bookCommentService->getBookComments($id);
+        $genres = [];
         return Inertia::render('Books/Show', [
             'book' => $book,
+            'comments' => $comments,
+            'genres' => $genres,
         ]);
     }
 
