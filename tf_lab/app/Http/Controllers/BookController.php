@@ -35,11 +35,13 @@ class BookController extends Controller
     {
         $book = $this->bookService->getBook($id);
         $comments = $this->bookCommentService->getBookComments($request, $id);
-        $genres = [];
+        $genres = $this->bookService->getBookGenres($id);
+        $tags = $this->bookService->getBookTags($id);
         return Inertia::render('Books/Show', [
             'book' => $book,
             'comments' => $comments,
             'genres' => $genres,
+            'tags' => $tags,
         ]);
     }
 

@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\book\BookComment;
 use App\Models\book\BookCommentLike;
 use App\Services\BookCommentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BookCommentController extends Controller
 {
@@ -23,7 +21,7 @@ class BookCommentController extends Controller
         $this->bookCommentService->storeComment($request, $bookId);
     }
 
-    public function toggleLike(Request $request, $commentId)
+    public function toggleLike(Request $request, $commentId): void
     {
         $like = BookCommentLike::where('user_id', auth()->id())
             ->where('comment_id', $commentId)

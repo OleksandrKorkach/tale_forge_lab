@@ -46,9 +46,11 @@ export default {
     },
     methods: {
         deleteComment(commentId) {
-            this.$inertia.delete(`/comments/${commentId}/delete`, {
-                preserveScroll: true
-            });
+            if (confirm('Вы уверены, что хотите удалить этот комментарий?')) {
+                this.$inertia.delete(`/comments/${commentId}/delete`, {
+                    preserveScroll: true
+                });
+            }
         },
         likeComment(commentId, type) {
             // Отправляем запрос с сохранением позиции скролла

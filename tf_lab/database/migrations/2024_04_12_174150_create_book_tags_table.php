@@ -6,26 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('book_genres', function (Blueprint $table) {
+        Schema::create('book_tags', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('text_color');
-            $table->string('background_color');
             $table->timestamps();
         });
 
-        Schema::create('book_genre', function (Blueprint $table) {
+        Schema::create('book_tag', function (Blueprint $table) {
             $table->id();
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
-            $table->foreignId('genre_id')->constrained('book_genres')->onDelete('cascade');
+            $table->foreignId('tag_id')->constrained('book_tags')->onDelete('cascade');
             $table->timestamps();
         });
-    }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('book_genres');
     }
 };

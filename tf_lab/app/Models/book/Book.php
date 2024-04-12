@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
@@ -40,5 +41,15 @@ class Book extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(BookComment::class);
+    }
+
+    public function genres(): BelongsToMany
+    {
+        return $this->belongsToMany(BookGenre::class, 'book_genre', 'book_id', 'genre_id');
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(BookTag::class, 'book_tag', 'book_id', 'tag_id');
     }
 }

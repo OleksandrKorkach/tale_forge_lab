@@ -29,7 +29,7 @@ import BookInfo from "@/Pages/Books/partial/BookInfo.vue";
                             </div>
                         </div>
                         <div class="w-8/12 py-2 px-2">
-                            <BookInfo :book="book" />
+                            <BookInfo :book="book" :genres="genres" :tags="tags" />
                             <div class="mt-6">
                                 <CommentsHeader :comments="comments" :book="book" />
                                 <Comments :comments="comments" />
@@ -50,6 +50,7 @@ export default {
         book: Object,
         comments: Array,
         genres: Array,
+        tags: Array,
     },
 }
 

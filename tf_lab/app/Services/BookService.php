@@ -14,9 +14,14 @@ class BookService
         return Book::findOrFail($id);
     }
 
-    public function getBookGenres()
+    public function getBookGenres($bookId)
     {
+        return Book::find($bookId)->genres;
+    }
 
+    public function getBookTags($bookId)
+    {
+        return Book::find($bookId)->tags;
     }
 
     public function getPage($bookId, $pageId): Page
