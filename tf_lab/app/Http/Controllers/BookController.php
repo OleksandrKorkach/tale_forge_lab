@@ -31,10 +31,10 @@ class BookController extends Controller
         ]);
     }
 
-    public function show($id): Response
+    public function show(Request $request, $id): Response
     {
         $book = $this->bookService->getBook($id);
-        $comments = $this->bookCommentService->getBookComments($id);
+        $comments = $this->bookCommentService->getBookComments($request, $id);
         $genres = [];
         return Inertia::render('Books/Show', [
             'book' => $book,

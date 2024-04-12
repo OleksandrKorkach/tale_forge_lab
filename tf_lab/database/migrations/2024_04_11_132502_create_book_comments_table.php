@@ -16,11 +16,13 @@ return new class extends Migration
             $table->text('content');
             $table->string('username');
             $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('number_of_likes')->default(0);
             $table->unsignedBigInteger('number_of_dislikes')->default(0);
             $table->timestamps();
 
-            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');;
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
         });
     }

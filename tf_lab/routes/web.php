@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookCommentController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
@@ -29,6 +30,8 @@ Route::get('books/{book}', [BookController::class, 'show'])->name('books.show');
 Route::get('books/{book}/page/{page}', [BookController::class, 'showPage'])->name('books.show.page');
 
 Route::post('books/{book}/comments', [BookCommentService::class, 'storeComment'])->name('books.comment.store');
+Route::delete('comments/{commentId}/delete', [BookCommentService::class, 'deleteComment'])->name('books.comment.delete');
+Route::post('comments/{commentId}/likes', [BookCommentController::class, 'toggleLike'])->name('comments.store');
 
 Route::post('books/{book}/page/{page}', [BookController::class, 'addBlockToPage'])->name('books.add.block');
 Route::delete('/blocks/{block}', [BookController::class, 'destroyPageBlock'])->name('book.page.destroy');
