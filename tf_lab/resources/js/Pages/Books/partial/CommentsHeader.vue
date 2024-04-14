@@ -4,7 +4,7 @@
             <div class="text-xl font-bold">Reviews ({{ comments.length }})</div>
         </div>
         <div class="flex items-center gap-2">
-            <div class="flex rounded border-black border-2 py-1 px-2 items-center">
+            <div class="flex rounded py-1 px-2 items-center">
                 <button id="sort1" @click="showSortedComments(1)" class="font-semibold text-md pr-1 hover:scale-[103%]">Date</button>
                 <div class="w-[1px] bg-black h-4"></div>
                 <button id="sort2" @click="showSortedComments(2)" class="text-md px-1 hover:scale-[103%]">Popularity</button>

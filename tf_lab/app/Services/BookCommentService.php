@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\book\Book;
 use App\Models\book\BookComment;
+use App\Models\book\BookCommentLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,5 +46,26 @@ class BookCommentService
     public function deleteComment($commentId): void
     {
         BookComment::destroy($commentId);
+    }
+
+    public function toggleLike(Request $request, $commentId): void
+    {
+        $like = BookCommentLike::where('user_id', auth()->id())
+            ->where('comment_id', $commentId)
+            ->first();
+
+        if ($like) {
+            if ($like->type === $request->type) {
+                $like->delete();
+            } else {
+                $like->update(['type' => $request->type]);
+            }
+        } else {
+            BookCommentLike::create([
+                'user_id' => auth()->id(),
+                'comment_id' => $commentId,
+                'type' => $request->type
+            ]);
+        }
     }
 }

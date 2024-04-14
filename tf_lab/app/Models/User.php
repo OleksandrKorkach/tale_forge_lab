@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\book\Book;
 use App\Models\book\BookCommentLike;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,5 +42,10 @@ class User extends Authenticatable
     public function likes(): HasMany
     {
         return $this->hasMany(BookCommentLike::class);
+    }
+
+    public function favoriteBooks(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'favorite_books');
     }
 }

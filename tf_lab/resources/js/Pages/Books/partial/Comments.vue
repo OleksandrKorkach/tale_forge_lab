@@ -53,7 +53,6 @@ export default {
             }
         },
         likeComment(commentId, type) {
-            // Отправляем запрос с сохранением позиции скролла
             this.$inertia.post(`/comments/${commentId}/likes`, {
                 type: type
             }, {

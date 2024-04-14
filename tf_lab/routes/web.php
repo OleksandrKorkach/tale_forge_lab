@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\BookCommentController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FavoriteBookController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Services\BookCommentService;
 use Illuminate\Foundation\Application;
@@ -25,16 +27,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('books', [BookController::class, 'index'])->name('books.index');
-Route::get('books/{book}', [BookController::class, 'show'])->name('books.show');
-Route::get('books/{book}/page/{page}', [BookController::class, 'showPage'])->name('books.show.page');
+Route::prefix('books')->group(function () {
+    Route::get('', [BookController::class, 'index'])->name('books.index');
+    Route::get('{book}', [BookController::class, 'show'])->name('books.show');
+});
 
-Route::post('books/{book}/comments', [BookCommentService::class, 'storeComment'])->name('books.comment.store');
-Route::delete('comments/{commentId}/delete', [BookCommentService::class, 'deleteComment'])->name('books.comment.delete');
+Route::post('books/{book}/comments', [BookCommentController::class, 'store'])->name('books.comment.store');
+Route::delete('comments/{commentId}/delete', [BookCommentController::class, 'deleteComment'])->name('books.comment.delete');
+
 Route::post('comments/{commentId}/likes', [BookCommentController::class, 'toggleLike'])->name('comments.store');
 
-Route::post('books/{book}/page/{page}', [BookController::class, 'addBlockToPage'])->name('books.add.block');
-Route::delete('/blocks/{block}', [BookController::class, 'destroyPageBlock'])->name('book.page.destroy');
+Route::get('books/{book}/pages/{page}', [PageController::class, 'show'])->name('pages.show');
+Route::delete('/blocks/{block}', [PageController::class, 'destroyBlock'])->name('pages.blocks.destroy');
+Route::post('books/{book}/page/{page}', [PageController::class, 'storeBlock'])->name('pages.blocks.store');
+
+Route::post('favorite-books/toggle', [FavoriteBookController::class, 'toggleFavorite'])->name('favorite-books.toggle');
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 

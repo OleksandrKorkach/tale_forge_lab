@@ -17,7 +17,6 @@ class BookCommentLikeObserver
 
     public function updated(BookCommentLike $like): void
     {
-        // Проверяем, что произошло изменение типа
         if ($like->isDirty('type')) {
             if ($like->getOriginal('type') === 'like') {
                 $like->comment->decrement('number_of_likes');
@@ -38,17 +37,11 @@ class BookCommentLikeObserver
         }
     }
 
-    /**
-     * Handle the BookCommentLike "restored" event.
-     */
     public function restored(BookCommentLike $bookCommentLike): void
     {
         //
     }
 
-    /**
-     * Handle the BookCommentLike "force deleted" event.
-     */
     public function forceDeleted(BookCommentLike $bookCommentLike): void
     {
         //
