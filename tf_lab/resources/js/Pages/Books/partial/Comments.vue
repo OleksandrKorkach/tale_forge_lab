@@ -13,13 +13,19 @@
                 <div class="flex justify-end gap-2 items-center">
                     <div class="flex items-center gap-0.5">
                         <div class="text-green-500">{{comment.number_of_likes}}</div>
-                        <button @click="likeComment(comment.id, 'like')" class="material-symbols-outlined text-green-500">
+                        <button v-if="likedComments.includes(comment.id)" @click="likeComment(comment.id, 'like')" class="material-symbols-rounded text-green-500">
+                            thumb_up
+                        </button>
+                        <button v-else @click="likeComment(comment.id, 'like')" class="material-symbols-outlined text-green-500">
                             thumb_up
                         </button>
                     </div>
                     <div class="flex items-center gap-0.5">
                         <div class="text-red-500">{{comment.number_of_dislikes}}</div>
-                        <button @click="likeComment(comment.id, 'dislike')" class="material-symbols-outlined text-red-500">
+                        <button v-if="dislikedComments.includes(comment.id)" @click="likeComment(comment.id, 'dislike')" class="material-symbols-rounded text-red-500 ">
+                            thumb_down
+                        </button>
+                        <button v-else @click="likeComment(comment.id, 'dislike')" class="material-symbols-outlined text-red-500">
                             thumb_down
                         </button>
                     </div>
@@ -38,6 +44,8 @@
 export default {
     props: {
         comments: Array,
+        likedComments: Array,
+        dislikedComments: Array,
     },
     computed: {
         userId() {

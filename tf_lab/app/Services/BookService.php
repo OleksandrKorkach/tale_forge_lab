@@ -7,6 +7,7 @@ use App\Models\book\Page;
 use App\Models\book\PageBlock;
 use App\Repositories\BookRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookService
 {
@@ -24,12 +25,18 @@ class BookService
         $genres = $this->getBookGenres($id);
         $tags = $this->getBookTags($id);
         $isFavourite = $book->isFavoritedBy(auth()->user());
+        $inList = $book->isListedBy(auth()->user());
+        $likedComments = $this->bookCommentService->userLikedCommentsByBook(Auth::id(), $id);
+        $dislikedComments = $this->bookCommentService->userDislikedCommentsByBook(Auth::id(), $id);
         return [
             'book' => $book,
             'comments' => $comments,
             'genres' => $genres,
             'tags' => $tags,
             'isFavourite' => $isFavourite,
+            'likedComments' => $likedComments,
+            'dislikedComments' => $dislikedComments,
+            'inList' => $inList,
         ];
     }
 

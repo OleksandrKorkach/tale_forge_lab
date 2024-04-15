@@ -42,6 +42,7 @@ Route::delete('/blocks/{block}', [PageController::class, 'destroyBlock'])->name(
 Route::post('books/{book}/page/{page}', [PageController::class, 'storeBlock'])->name('pages.blocks.store');
 
 Route::post('favorite-books/toggle', [FavoriteBookController::class, 'toggleFavorite'])->name('favorite-books.toggle');
+Route::post('booklist/toggle', [FavoriteBookController::class, 'toggleBooklist'])->name('booklist.toggle');
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 

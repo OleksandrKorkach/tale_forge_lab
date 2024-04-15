@@ -23,7 +23,6 @@ class Book extends Model
         'year',
         'language',
         'quote',
-        'author_name',
         'pages',
         'age_rating',
     ];
@@ -61,5 +60,15 @@ class Book extends Model
     public function favoredByUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorite_books');
+    }
+
+    public function listedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_booklist');
+    }
+
+    public function isListedBy(User $user): bool
+    {
+        return $this->listedByUsers()->where('user_id', $user->id)->exists();
     }
 }

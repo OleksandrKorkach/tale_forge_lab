@@ -24,7 +24,7 @@ import { Link } from '@inertiajs/vue3';
                             <div class="w-[25%] relative border-white border-4 bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
                                 <Link :href="`/books/${book.id}`">
                                     <img src="/images/tf_lab_logo.webp"  alt="Logo" />
-                                    <div class="pb-2 flex justify-center text-center font-semibold">{{ book.title }}</div>
+                                    <div class="p-2 flex justify-center text-center font-semibold">{{ book.title }}</div>
                                 </Link>
                                 <button v-if="book.is_published === true" class="absolute flex items-center justify-center top-2 right-2 rounded " title="public">
                                     <span class="material-symbols-outlined text-[40px] text-green-400 hover:text-green-500">

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->float('community_rating')->nullable();
             $table->boolean('is_published')->default(false);
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('members')->default(0);
+            $table->unsignedBigInteger('favorite_members')->default(0);
 
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

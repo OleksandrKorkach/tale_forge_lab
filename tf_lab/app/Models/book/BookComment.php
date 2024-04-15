@@ -23,6 +23,6 @@ class BookComment extends Model
 
     public function likes(): HasMany
     {
-        return $this->hasMany(BookCommentLike::class);
+        return $this->hasMany(BookCommentLike::class, 'comment_id');
     }
 }

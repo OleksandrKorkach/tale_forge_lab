@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\book\Book;
 use App\Models\book\BookComment;
 use App\Models\book\BookCommentLike;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,5 +68,25 @@ class BookCommentService
                 'type' => $request->type
             ]);
         }
+    }
+
+    public function userLikedCommentsByBook($userId, $bookId)
+    {
+        return BookComment::where('book_id', $bookId)
+        ->whereHas('likes', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                ->where('type', 'like');
+        })
+            ->pluck('id');
+    }
+
+    public function userDislikedCommentsByBook($userId, $bookId)
+    {
+        return BookComment::where('book_id', $bookId)
+            ->whereHas('likes', function ($query) use ($userId) {
+                $query->where('user_id', $userId)
+                    ->where('type', 'dislike');
+            })
+            ->pluck('id');
     }
 }

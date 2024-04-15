@@ -24,10 +24,23 @@ import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
                                 Read from first page
                             </Link>
                             <div class="flex mt-1 rounded-lg font-semibold">
-                                <button class="w-1/2 text-center py-1 border-y-4 border-l-4 border-black hover:bg-black hover:text-white rounded-l-lg ease-in-out">Add to readlist</button>
-                                <button :class="{'bg-red-500 text-white hover:bg-white hover:text-red-500': isFavorited, 'bg-white text-red-500 hover:bg-red-500 hover:text-white': !isFavorited}" @click="toggleFavorite(book.id)"
-                                        class="w-1/2 text-center py-1 border-y-4 border-r-4 border-red-500 hover:bg-red-500 text-red-500 rounded-r-lg ease-in-out ">
-                                    {{ isFavorited ? 'In Favorites' : 'Add to Favorites' }}
+                                <button @click="toggleInList(book.id)" class="w-1/2 flex text-center justify-center items-center py-1 border-y-4 border-l-4 border-black hover:bg-black hover:text-white rounded-l-lg">
+                                    <div>
+                                        {{ inList ? 'In readlist' : 'Add to readList' }}
+                                    </div>
+                                    <div v-if="inList" class="material-symbols-outlined font-semibold">
+                                        done
+                                    </div>
+                                </button>
+                                <button  @click="toggleFavorite(book.id)"
+                                        class="w-1/2 flex justify-center items-center py-1 border-y-4 border-r-4 border-red-500 hover:bg-red-500 hover:text-white text-red-500 rounded-r-lg"
+                                >
+                                    <div>
+                                        {{ isFavourite ? 'In Favorites' : 'Add to Favorites' }}
+                                    </div>
+                                    <div v-if="isFavourite" class="material-symbols-outlined font-semibold">
+                                        done
+                                    </div>
                                 </button>
                             </div>
                             <RatingStat :book="book"/>
@@ -36,7 +49,7 @@ import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
                             <BookInfo :book="book" :genres="genres" :tags="tags" />
                             <div class="mt-6">
                                 <CommentsHeader :comments="comments" :book="book" />
-                                <Comments :comments="comments" />
+                                <Comments :comments="comments" :likedComments="likedComments" :dislikedComments="dislikedComments" />
                             </div>
                         </div>
                     </div>
@@ -55,12 +68,19 @@ export default {
         comments: Array,
         genres: Array,
         tags: Array,
-        isFavorited: Boolean,
+        isFavourite: Boolean,
+        inList: Boolean,
+        likedComments: Array,
+        dislikedComments: Array,
     },
     methods: {
         toggleFavorite() {
             this.$inertia.post(`/favorite-books/toggle`, { book_id: this.book.id });
-            this.isFavorited = !this.isFavorited;
+            this.isFavourite = !this.isFavourite;
+        },
+        toggleInList() {
+            this.$inertia.post(`/booklist/toggle`, { book_id: this.book.id });
+            this.isFavourite = !this.isFavourite;
         },
     }
 }

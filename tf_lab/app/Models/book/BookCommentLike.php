@@ -18,6 +18,6 @@ class BookCommentLike extends Model
 
     public function comment(): BelongsTo
     {
-        return $this->belongsTo(BookComment::class);
+        return $this->belongsTo(BookComment::class, 'comment_id');
     }
 }

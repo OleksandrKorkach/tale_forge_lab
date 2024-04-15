@@ -17,13 +17,13 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <div class="font-semibold">27.6K</div>
+            <div class="font-semibold">{{ book.members }}</div>
             <div class="material-symbols-outlined text-3xl">
                 groups
             </div>
         </div>
         <div class="flex items-center text-red-500 gap-0.5">
-            <div class="font-semibold">5.1K</div>
+            <div class="font-semibold">{{ book.favorite_members}}</div>
             <div class="material-symbols-outlined text-xl font-semibold">
                 heart_plus
             </div>
