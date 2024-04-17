@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->text('quote');
+            $table->text('quote')->nullable();
             $table->string('author_name');
             $table->string('season')->nullable();
             $table->integer('year')->nullable();

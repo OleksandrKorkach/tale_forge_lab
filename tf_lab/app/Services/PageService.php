@@ -3,16 +3,19 @@
 namespace App\Services;
 
 use App\Models\book\Book;
-use App\Models\book\Page;
-use App\Models\book\PageBlock;
+use App\Models\page\Page;
+use App\Models\page\PageBlock;
 use Illuminate\Http\Request;
 
 class PageService
 {
-    public function getPageDetails($bookId, $pageId): array
+    public function getPageDetails(int $bookId, int $pageId): array
     {
         $book = Book::findOrFail($bookId);
-        $page = Page::with('blocks')->where('book_id', $bookId)->findOrFail($pageId);
+        $page = Page::with('blocks')
+            ->where('book_id', $bookId)
+            ->where('sequence', $pageId)
+            ->firstOrFail();
 
         return [
             'book' => $book,
@@ -22,6 +25,7 @@ class PageService
 
     public function addBlockToPage(Request $request, $bookId, $pageId): void
     {
+        $pageId = Page::where(['book_id' => $bookId, 'sequence' => $pageId])->firstOrFail()->id;
         $block = new PageBlock([
             'content' => $request->input('content'),
             'page_id' => $pageId,

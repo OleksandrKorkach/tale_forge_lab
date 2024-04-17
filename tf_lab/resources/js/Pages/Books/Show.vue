@@ -43,7 +43,7 @@ import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
                                     </div>
                                 </button>
                             </div>
-                            <RatingStat :book="book"/>
+                            <RatingStat :book="book" :rating="rating"/>
                         </div>
                         <div class="w-8/12 py-2 px-2">
                             <BookInfo :book="book" :genres="genres" :tags="tags" />
@@ -72,6 +72,7 @@ export default {
         inList: Boolean,
         likedComments: Array,
         dislikedComments: Array,
+        rating: Object,
     },
     methods: {
         toggleFavorite() {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models\book;
+namespace App\Models\page;
 
+use App\Models\book\Book;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,11 @@ class Page extends Model
     use HasFactory;
 
     protected $table = 'pages';
+
+    protected $fillable = [
+        'sequence',
+        'book_id',
+    ];
 
     public function book(): BelongsTo
     {

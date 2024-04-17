@@ -45,6 +45,15 @@ Route::post('favorite-books/toggle', [FavoriteBookController::class, 'toggleFavo
 Route::post('booklist/toggle', [FavoriteBookController::class, 'toggleBooklist'])->name('booklist.toggle');
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
+Route::get('/lab/create', [LabController::class, 'create'])->name('lab.create');
+Route::post('/lab/store-book', [LabController::class, 'storeBook'])->name('lab.book.store');
+Route::put('/lab/update-book/{book}', [LabController::class, 'updateBook'])->name('lab.book.update');
+Route::delete('/lab/delete-book/{bookId}', [LabController::class, 'deleteBook'])->name('lab.book.delete');
+Route::post('/lab/publish-book/{book}', [LabController::class, 'publishBook'])->name('lab.book.publish');
+Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.book.edit');
+
+Route::post('ratings/{book}', [BookController::class, 'setRating'])->name('books.set-rating');
+Route::delete('ratings/{bookId}', [BookController::class, 'deleteBookRating'])->name('books.delete-rating');
 
 Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
 

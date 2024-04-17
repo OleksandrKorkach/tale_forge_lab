@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\book\Book;
 use App\Models\book\BookCommentLike;
+use App\Models\book\BookRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,6 +38,11 @@ class User extends Authenticatable
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(BookRating::class);
     }
 
     public function likes(): HasMany

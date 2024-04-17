@@ -2,6 +2,7 @@
 
 namespace App\Models\book;
 
+use App\Models\page\Page;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,11 +26,17 @@ class Book extends Model
         'quote',
         'pages',
         'age_rating',
+        'user_id'
     ];
 
     public function pages(): HasMany
     {
         return $this->hasMany(Page::class);
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(BookRating::class);
     }
 
     public function isFavoritedBy(User $user): bool

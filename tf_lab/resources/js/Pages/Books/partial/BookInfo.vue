@@ -11,11 +11,11 @@
         </div>
         <div class="mt-2 font-semibold">Quote: "{{ book.quote }}"</div>
         <div class="mt-4 font-semibold">Author: {{ book.author_name }}</div>
-        <div class="font-semibold">Season: {{book.season}}, {{ book.year }}</div>
+        <div v-if="book.season" class="font-semibold">Season: {{ book.season }}, {{ book.year }}</div>
         <div class="font-semibold">Language: {{book.language}}</div>
         <div class="font-semibold">Pages: {{ book.pages }}</div>
         <div class="font-semibold">Rating: {{ book.age_rating }} </div>
-        <div class="font-semibold">Tags:
+        <div v-if="tags.length > 0" class="font-semibold">Tags:
             <template v-for="(tag, index) in tags" :key="index">
                 {{ tag.name }}<span v-if="index < tags.length - 1">, </span>
             </template>

@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput.vue";
 </script>
 
 <template>
-    <Head title="Books" />
+    <Head title="Page" />
 
     <AuthenticatedLayout>
         <div class="py-12">

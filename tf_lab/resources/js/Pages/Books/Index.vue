@@ -12,7 +12,7 @@ import { Link } from '@inertiajs/vue3';
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow sm:rounded-lg flex flex-wrap">
                     <template v-for="book in books" :key="book.id">
-                        <div class="w-[25%] border-white border-4 bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
+                        <div v-if="book.is_published === true" class="w-[25%] border-white border-4 bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
                             <Link :href="`/books/${book.id}`">
                                 <img src="/images/tf_lab_logo.webp"  alt="Logo" />
                                 <div class="p-2 flex justify-center text-center font-semibold">{{ book.title }}</div>

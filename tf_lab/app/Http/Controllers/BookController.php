@@ -28,4 +28,14 @@ class BookController extends Controller
         return Inertia::render('Books/Show', $data);
     }
 
+    public function setRating(Request $request, $bookId): void
+    {
+        $this->bookService->setBookRating($request, $bookId);
+    }
+
+    public function deleteBookRating($bookId): void
+    {
+        $this->bookService->deleteBookRating($bookId);
+    }
+
 }
