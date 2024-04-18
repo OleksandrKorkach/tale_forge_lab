@@ -3,7 +3,7 @@
 namespace App\Models\book;
 
 use App\Models\page\Page;
-use App\Models\User;
+use App\Models\user\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

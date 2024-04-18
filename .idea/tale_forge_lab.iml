@@ -124,6 +124,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/spatie/laravel-permission" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

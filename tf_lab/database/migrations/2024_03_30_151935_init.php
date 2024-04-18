@@ -50,10 +50,92 @@ return new class extends Migration
 
             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
+
+        Schema::create('book_comments', function (Blueprint $table) {
+            $table->id();
+            $table->text('content');
+            $table->string('username');
+            $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('number_of_likes')->default(0);
+            $table->unsignedBigInteger('number_of_dislikes')->default(0);
+            $table->timestamps();
+
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
+        Schema::create('book_comment_likes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('comment_id')->constrained('book_comments')->onDelete('cascade');
+            $table->enum('type', ['like', 'dislike']);
+            $table->timestamps();
+        });
+
+        Schema::create('book_genres', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('text_color');
+            $table->string('background_color');
+            $table->timestamps();
+        });
+
+        Schema::create('book_genre', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->foreignId('genre_id')->constrained('book_genres')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('book_tags', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('book_tag', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tag_id')->constrained('book_tags')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('favorite_books', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('user_booklist', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('book_ratings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->integer('value');
+            $table->timestamps();
+        });
+
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('book_ratings');
+        Schema::dropIfExists('user_booklist');
+        Schema::dropIfExists('favorite_books');
+        Schema::dropIfExists('book_tag');
+        Schema::dropIfExists('book_tags');
+        Schema::dropIfExists('book_genre');
+        Schema::dropIfExists('book_genres');
+        Schema::dropIfExists('book_comment_likes');
+        Schema::dropIfExists('book_comments');
         Schema::dropIfExists('page_blocks');
         Schema::dropIfExists('pages');
         Schema::dropIfExists('books');

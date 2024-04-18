@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\book\Book;
 use App\Models\page\Page;
-use App\Models\User;
+use App\Models\user\User;
 use App\Utils\DateUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
