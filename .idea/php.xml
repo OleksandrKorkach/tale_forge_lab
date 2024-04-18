@@ -128,6 +128,7 @@
       <path value="$PROJECT_DIR$/tf_lab/vendor/tijsverkoyen/css-to-inline-styles" />
       <path value="$PROJECT_DIR$/tf_lab/vendor/dragonmantank/cron-expression" />
       <path value="$PROJECT_DIR$/tf_lab/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/spatie/laravel-permission" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

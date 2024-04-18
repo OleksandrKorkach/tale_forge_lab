@@ -2,7 +2,7 @@
 
 namespace App\Models\book;
 
-use App\Models\User;
+use App\Models\user\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
