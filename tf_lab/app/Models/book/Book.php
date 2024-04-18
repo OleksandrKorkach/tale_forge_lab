@@ -39,11 +39,6 @@ class Book extends Model
         return $this->hasMany(BookRating::class);
     }
 
-    public function isFavoritedBy(User $user): bool
-    {
-        return $this->favoredByUsers()->where('user_id', $user->id)->exists();
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -64,18 +59,4 @@ class Book extends Model
         return $this->belongsToMany(BookTag::class, 'book_tag', 'book_id', 'tag_id');
     }
 
-    public function favoredByUsers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'favorite_books');
-    }
-
-    public function listedByUsers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'user_booklist');
-    }
-
-    public function isListedBy(User $user): bool
-    {
-        return $this->listedByUsers()->where('user_id', $user->id)->exists();
-    }
 }

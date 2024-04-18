@@ -2,12 +2,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head} from '@inertiajs/vue3';
 import TextInput from "@/Components/TextInput.vue";
+import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 </script>
 
 <template>
     <Head title="Page" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -72,7 +73,7 @@ import TextInput from "@/Components/TextInput.vue";
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </DefaultLayout>
 </template>
 
 <script>

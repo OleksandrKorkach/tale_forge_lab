@@ -11,10 +11,10 @@
                 <div class="w-[1px] bg-black h-4"></div>
                 <button id="sort3" @click="showSortedComments(3)" class="text-md pl-1 hover:scale-[103%]">Most Liked</button>
             </div>
-            <button @click="showWriteComment" class="border-black border-2 bg-gray-900 rounded font-medium text-white py-1 px-2 hover:bg-gray-700">Comment . .</button>
+            <button v-if="$page.props.auth.user" @click="showWriteComment" class="border-black border-2 bg-gray-900 rounded font-medium text-white py-1 px-2 hover:bg-gray-700">Comment . .</button>
         </div>
     </div>
-    <div id="writeComment" class="hidden">
+    <div v-if="$page.props.auth.user" id="writeComment" class="hidden">
         <div class="">
             <div id="commentInput" @input="updateComment" contenteditable="true" class="rounded border-black min-h-[100px] p-2 border-2"></div>
         </div>

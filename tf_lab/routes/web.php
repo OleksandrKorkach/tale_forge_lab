@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\BookCommentController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\FavoriteBookController;
+use App\Http\Controllers\BookListController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
 use App\Http\Controllers\PageController;
@@ -41,8 +41,8 @@ Route::get('books/{book}/pages/{page}', [PageController::class, 'show'])->name('
 Route::delete('/blocks/{block}', [PageController::class, 'destroyBlock'])->name('pages.blocks.destroy');
 Route::post('books/{book}/page/{page}', [PageController::class, 'storeBlock'])->name('pages.blocks.store');
 
-Route::post('favorite-books/toggle', [FavoriteBookController::class, 'toggleFavorite'])->name('favorite-books.toggle');
-Route::post('booklist/toggle', [FavoriteBookController::class, 'toggleBooklist'])->name('booklist.toggle');
+Route::post('favorite-books/toggle', [BookListController::class, 'toggleFavorite'])->name('favorite-books.toggle');
+Route::post('booklist/toggle', [BookListController::class, 'toggleReadList'])->name('booklist.toggle');
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 Route::get('/lab/create', [LabController::class, 'create'])->name('lab.create');

@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Models\book\Book;
 use App\Models\book\BookGenre;
 use App\Models\book\BookRating;
+use App\Models\user\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BookService
 {
@@ -25,8 +27,9 @@ class BookService
         $comments = $this->bookCommentService->getBookComments($request, $id);
         $genres = $this->getBookGenres($id);
         $tags = $this->getBookTags($id);
-        $isFavourite = $book->isFavoritedBy(auth()->user());
-        $inList = $book->isListedBy(auth()->user());
+
+        $isFavourite = $this->isBookInUserFavoriteList($id, Auth::id());
+        $inList = $this->isBookInUserReadList($id, Auth::id());
         $rating = $book->ratings->where('user_id', auth()->id())->first();
         if (!$rating) {
             $rating = new BookRating();
@@ -44,6 +47,24 @@ class BookService
             'inList' => $inList,
             'rating' => $rating,
         ];
+    }
+
+    public function isBookInUserReadList($bookId, $userId): bool
+    {
+        $favoriteList = User::find($userId)->bookLists->where('type', 'readlist')->first()->id ?? null;
+        return DB::table('book_list_books')
+            ->where('book_list_id', $favoriteList)
+            ->where('book_id', $bookId)
+            ->exists();
+    }
+
+    public function isBookInUserFavoriteList($bookId, $userId): bool
+    {
+        $favoriteList = User::find($userId)->bookLists()->where('type', 'favorite')->first()->id ?? null;
+        return DB::table('book_list_books')
+            ->where('book_list_id', $favoriteList)
+            ->where('book_id', $bookId)
+            ->exists();
     }
 
     public function getAllBooks()

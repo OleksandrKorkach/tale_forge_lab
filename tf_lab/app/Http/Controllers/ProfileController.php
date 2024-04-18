@@ -17,12 +17,12 @@ class ProfileController extends Controller
 
     public function edit(Request $request): Response
     {
-        $books = User::find(Auth::id())->favoriteBooks;
-        $readlist = User::find(Auth::id())->booklist;
+        $favoriteBooks = User::find(Auth::id())->bookLists->where('type', 'favorite')->first()->books;
+        $readlist = User::find(Auth::id())->bookLists->where('type', 'readlist')->first()->books;
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
-            'books' => $books,
+            'books' => $favoriteBooks,
             'readlist' => $readlist,
         ]);
     }

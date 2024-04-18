@@ -2,12 +2,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
+import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 </script>
 
 <template>
     <Head title="Create Book" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow sm:rounded-lg">
@@ -93,7 +94,7 @@ import InputLabel from "@/Components/InputLabel.vue";
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </DefaultLayout>
 </template>
 
 <script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\book\BookList;
 use App\Models\user\User;
 use App\Models\user\UserRoles;
 use Illuminate\Auth\Events\Registered;
@@ -41,6 +42,20 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
+        BookList::create([
+            'name' => 'readlist',
+            'description' => 'readlist',
+            'type' => 'readlist',
+            'user_id' => $user->id,
+        ]);
+
+        BookList::create([
+            'name' => 'favorite',
+            'description' => 'favorite',
+            'type' => 'favorite',
+            'user_id' => $user->id,
+        ]);
 
         return redirect(route('main', absolute: false));
     }

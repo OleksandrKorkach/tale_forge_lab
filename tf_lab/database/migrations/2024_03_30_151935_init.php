@@ -101,19 +101,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('favorite_books', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('book_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
-
-        Schema::create('user_booklist', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('book_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
+//        Schema::create('favorite_books', function (Blueprint $table) {
+//            $table->id();
+//            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+//            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+//            $table->timestamps();
+//        });
+//
+//        Schema::create('user_booklist', function (Blueprint $table) {
+//            $table->id();
+//            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+//            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+//            $table->timestamps();
+//        });
 
         Schema::create('book_ratings', function (Blueprint $table) {
             $table->id();
@@ -128,8 +128,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('book_ratings');
-        Schema::dropIfExists('user_booklist');
-        Schema::dropIfExists('favorite_books');
         Schema::dropIfExists('book_tag');
         Schema::dropIfExists('book_tags');
         Schema::dropIfExists('book_genre');

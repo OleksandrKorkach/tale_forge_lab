@@ -22,7 +22,7 @@
                     </div>
                     <div class="flex items-center gap-0.5">
                         <div class="text-red-500">{{comment.number_of_dislikes}}</div>
-                        <button v-if="dislikedComments.includes(comment.id)" @click="likeComment(comment.id, 'dislike')" class="material-symbols-rounded text-red-500 ">
+                        <button v-if="dislikedComments.includes(comment.id) && $page.props.auth.user" @click="likeComment(comment.id, 'dislike')" class="material-symbols-rounded text-red-500 ">
                             thumb_down
                         </button>
                         <button v-else @click="likeComment(comment.id, 'dislike')" class="material-symbols-outlined text-red-500">

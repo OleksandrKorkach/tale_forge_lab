@@ -2,12 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 </script>
 
 <template>
     <Head title="Books" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow sm:rounded-lg flex flex-wrap">
@@ -22,7 +24,7 @@ import { Link } from '@inertiajs/vue3';
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </DefaultLayout>
 </template>
 
 <script>

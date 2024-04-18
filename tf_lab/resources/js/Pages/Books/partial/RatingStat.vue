@@ -4,13 +4,13 @@
 
 <template>
     <div class="relative text-xl gap-1 justify-between flex px-1">
-        <div id="ratingStars" class="absolute mt-6 ml-6 hidden flex items-center bg-white border-2 border-black rounded px-2 py-1 gap-2">
+        <div v-if="$page.props.auth.user" id="ratingStars" class="absolute mt-6 ml-6 hidden flex items-center bg-white border-2 border-black rounded px-2 py-1 gap-2">
             <button v-if="rating.value" @click="deleteRating" class="bg-red-500 w-[18px] h-[18px] rounded-2xl flex items-center justify-center text-white text-[14px]">x</button>
             <div class="items-center flex">
                 <RatingStars :initial-rating="initialRating" @rating-selected="submitRating"/>
             </div>
         </div>
-        <button @click="showRatingStars" class="relative text-blue-500 flex gap-0.5 items-center ">
+        <button v-if="$page.props.auth.user" @click="showRatingStars" class="relative text-blue-500 flex gap-0.5 items-center ">
             <div class="font-semibold ">{{rating.value ? rating.value : 'Rate '}}</div>
             <div class="material-symbols-outlined text-xl font-semibold">
                 star

@@ -4,6 +4,7 @@ namespace App\Models\user;
 
 use App\Models\book\Book;
 use App\Models\book\BookCommentLike;
+use App\Models\book\BookList;
 use App\Models\book\BookRating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -51,13 +52,9 @@ class User extends Authenticatable
         return $this->hasMany(BookCommentLike::class);
     }
 
-    public function favoriteBooks(): BelongsToMany
+    public function bookLists(): HasMany
     {
-        return $this->belongsToMany(Book::class, 'favorite_books');
+        return $this->hasMany(BookList::class);
     }
 
-    public function booklist(): BelongsToMany
-    {
-        return $this->belongsToMany(Book::class, 'user_booklist');
-    }
 }

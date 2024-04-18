@@ -6,12 +6,13 @@ import Comments from './partial/Comments.vue';
 import CommentsHeader from "@/Pages/Books/partial/CommentsHeader.vue";
 import BookInfo from "@/Pages/Books/partial/BookInfo.vue";
 import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
+import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 </script>
 
 <template>
     <Head title="Books" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow-2xl ">
@@ -23,7 +24,7 @@ import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
                             <Link :href="`/books/${book.id}/pages/1`" class="mt-2 bg-gradient-to-l from-red-600 to-gray-800 hover:from-red-700 hover:to-black text-white font-semibold flex justify-center rounded-lg p-2">
                                 Read from first page
                             </Link>
-                            <div class="flex mt-1 rounded-lg font-semibold">
+                            <div v-if="$page.props.auth.user" class="flex mt-1 rounded-lg font-semibold">
                                 <button @click="toggleInList(book.id)" class="w-1/2 flex text-center justify-center items-center py-1 border-y-4 border-l-4 border-black hover:bg-black hover:text-white rounded-l-lg">
                                     <div>
                                         {{ inList ? 'In readlist' : 'Add to readList' }}
@@ -32,7 +33,7 @@ import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
                                         done
                                     </div>
                                 </button>
-                                <button  @click="toggleFavorite(book.id)"
+                                <button @click="toggleFavorite(book.id)"
                                         class="w-1/2 flex justify-center items-center py-1 border-y-4 border-r-4 border-red-500 hover:bg-red-500 hover:text-white text-red-500 rounded-r-lg"
                                 >
                                     <div>
@@ -57,7 +58,7 @@ import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </DefaultLayout>
 </template>
 
 <script>
