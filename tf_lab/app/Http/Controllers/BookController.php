@@ -16,10 +16,17 @@ class BookController extends Controller
         $this->bookService = $bookService;
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $books = $this->bookService->getAllBooks();
-        return Inertia::render('Books/Index', ['books' => $books]);
+        $genres = $this->bookService->getAllBookGenres();
+
+        $books = $this->bookService
+            ->getAllBooks($request->input('sort'), $request->input('genre'), $request->input('language'));
+        return Inertia::render('Books/Index', [
+            'books' => $books,
+            'allGenres' => $genres,
+            'genre' => $request->input('genre', null),
+        ]);
     }
 
     public function show(Request $request, $id): Response
@@ -28,7 +35,7 @@ class BookController extends Controller
         return Inertia::render('Books/Show', $data);
     }
 
-    public function setRating(Request $request, $bookId): void
+    public function setBookRating(Request $request, $bookId): void
     {
         $this->bookService->setBookRating($request, $bookId);
     }

@@ -2,11 +2,19 @@
 
 namespace App\Utils;
 
+use DateTime;
+
 class DateUtil
 {
     public static function getCurrentSeason(): string
     {
-        $month = date('n');
+        $now = new DateTime();
+        return self::getSeason($now);
+    }
+
+    public static function getSeason($date): string
+    {
+        $month = $date->format('n');
 
         if ($month >= 3 && $month <= 5) {
             return 'Spring';
