@@ -1,6 +1,8 @@
 <script setup>
 
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
+import {Link} from "@inertiajs/vue3";
+
 </script>
 
 <template>
@@ -38,7 +40,7 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                             <div class="mt-6 p-2 ">
                                 <h1 class="text-md font-semibold">Your Lists</h1>
                                 <button class="mt-1 flex items-center px-2 py-2 border border-transparent text-md leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                    Readlist <span class="pl-1 text-black font-bold">{{readlist ? readlist : 0}}</span>
+                                    Readlist <span class="pl-1 text-black font-bold">{{readList ? readList : 0}}</span>
                                 </button>
                                 <button class="mt-1 flex items-center px-2 py-2 border border-transparent text-md leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                     Favorite books <span class="pl-1 text-black font-bold">{{ favorite ? favorite : 0 }}</span>
@@ -47,45 +49,21 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                         </div>
                         <div class="w-4/12 px-2 flex flex-col gap-2">
                             <h1 class="text-lg font-semibold">Last Visited</h1>
-                            <div class=" flex">
-                                <div class="bg-gradient-to-b from-blue-400 via-orange-500 to-yellow-300 w-3/12 flex items-center justify-center ">
-                                    <img src="/images/tf_lab_logo.webp" alt="">
-                                </div>
-                                <div class="p-3 flex justify-between w-full">
-                                    <div class="font-semibold">
-                                        Book name
+                            <template v-for="list in bookLists">
+                                <div class="flex">
+                                    <div class="bg-gradient-to-b from-blue-400 via-orange-500 to-yellow-300 w-3/12 flex items-center justify-center ">
+                                        <img src="/images/tf_lab_logo.webp" alt="">
                                     </div>
-                                    <div class="font-bold">
-                                        14
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" flex">
-                                <div class="bg-gradient-to-b from-blue-400 via-orange-500 to-yellow-300 w-3/12 flex items-center justify-center ">
-                                    <img src="/images/tf_lab_logo.webp" alt="">
-                                </div>
-                                <div class="p-3 flex justify-between w-full">
-                                    <div class="font-semibold">
-                                        Book name
-                                    </div>
-                                    <div class="font-bold">
-                                        14
+                                    <div class="p-3 flex justify-between w-full">
+                                        <Link :href="`/lists/${list.id}`" class="font-semibold">
+                                            {{ list.name}}
+                                        </Link>
+                                        <div class="font-bold">
+                                            go to list
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class=" flex">
-                                <div class="bg-gradient-to-b from-blue-400 via-orange-500 to-yellow-300 w-3/12 flex items-center justify-center ">
-                                    <img src="/images/tf_lab_logo.webp" alt="">
-                                </div>
-                                <div class="p-3 flex justify-between w-full">
-                                    <div class="font-semibold">
-                                        Book name
-                                    </div>
-                                    <div class="font-bold">
-                                        14
-                                    </div>
-                                </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                     <div class="p-2 mt-5">
@@ -107,8 +85,9 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 export default {
     props: {
         userInfo: Object,
+        bookLists: Array,
         favorite: Number,
-        readlist: Number,
+        readList: Number,
     }
 }
 </script>

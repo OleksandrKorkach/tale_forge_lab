@@ -48,7 +48,10 @@ class BookFactory extends Factory
             ]),
             'quote' => $this->faker->sentence,
             'pages' => $this->faker->numberBetween(100, 500),
-            'age_rating' => $this->faker->numberBetween(8, 18) . '+',
+            'age_rating' => $this->faker->randomElement([
+                "0+", "3+", "5+", "7+", "9+", "10+", "12+", "14+", "16+", "18+",
+                "AA", "PG", "GR", "MT", "ED", "YA", "AF", "ANF", "PS", "R"
+            ]),
             'is_published' => true,
             'community_rating' => $this->faker->randomFloat(2, 3, 10),
             'members' => $this->faker->numberBetween(300, 2400),

@@ -73,7 +73,7 @@ class LabController extends Controller
     public function publishBook($bookId): RedirectResponse
     {
         $this->labService->publishBook($bookId);
-        return redirect('/lab/edit/' . $bookId);
+        return redirect()->back();
     }
 
 }

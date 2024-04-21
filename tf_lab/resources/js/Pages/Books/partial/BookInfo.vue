@@ -14,7 +14,7 @@ import { Link } from '@inertiajs/vue3';
             </template>
         </div>
         <div class="mt-2 font-semibold">Quote: "{{ book.quote }}"</div>
-        <div class="mt-4 font-semibold">Author: {{ book.author_name }}</div>
+        <Link :href="`/books?author=${book.author_name}`" class="mt-4 font-semibold">Author: {{ book.author_name }}</Link>
         <div v-if="book.season" class="font-semibold">Season: {{ book.season }}, {{ book.year }}</div>
         <Link :href="`/books?language=${book.language}`" class="font-semibold">Language: {{book.language}}</Link>
         <div class="font-semibold">Pages: {{ book.pages }}</div>

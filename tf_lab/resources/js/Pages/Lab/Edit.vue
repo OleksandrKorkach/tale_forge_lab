@@ -137,8 +137,9 @@ export default {
             this.form.put(`/lab/update-book/${this.book.id}`);
         },
         publishBook() {
-            confirm('Are you ready to publish this book?');
-            this.$inertia.post(`/lab/publish-book/${this.book.id}`);
+            if (confirm('Are you ready to publish this book?')) {
+                this.$inertia.post(`/lab/publish-book/${this.book.id}`);
+            }
         },
         destroyBook() {
             if (confirm('Are you sure you want to delete this organization?')) {

@@ -27,12 +27,12 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                                     <img src="/images/tf_lab_logo.webp"  alt="Logo" />
                                     <div class="p-2 flex justify-center text-center font-semibold">{{ book.title }}</div>
                                 </Link>
-                                <button v-if="book.is_published === true" class="absolute flex items-center justify-center top-2 right-2 rounded " title="public">
+                                <button @click="publishBook(book.id)" v-if="book.is_published === true" class="absolute flex items-center justify-center top-2 right-2 rounded " title="public">
                                     <span class="material-symbols-outlined text-[40px] text-green-400 hover:text-green-500">
                                         public
                                     </span>
                                 </button>
-                                <button v-else class="absolute flex items-center justify-center top-2 right-2 rounded" title="private" >
+                                <button @click="publishBook(book.id)" v-else class="absolute flex items-center justify-center top-2 right-2 rounded" title="private" >
                                     <span class="material-symbols-outlined text-[40px] text-red-500 hover:text-red-600">
                                         vpn_lock
                                     </span>
@@ -52,6 +52,13 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 export default {
     props: {
         books: Array,
+    },
+    methods: {
+        publishBook(bookId) {
+            if (confirm('Are you ready to publish this book?')) {
+                this.$inertia.post(`/lab/publish-book/${bookId}`);
+            }
+        },
     },
 }
 

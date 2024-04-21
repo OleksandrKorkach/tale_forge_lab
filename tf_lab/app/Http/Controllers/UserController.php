@@ -23,10 +23,12 @@ class UserController extends Controller
         $readListCount = $this->userService->getReadListCount($userId);
         $favoriteCount = $this->userService->getFavoriteListCount($userId);
         $user = $this->userService->getUser($userId);
+        $bookLists = $user->bookLists;
         return Inertia::render('Users/Show', [
             'userInfo' => $user,
-            'readlist' => $readListCount,
+            'readList' => $readListCount,
             'favorite' => $favoriteCount,
+            'bookLists' => $bookLists,
         ]);
     }
 

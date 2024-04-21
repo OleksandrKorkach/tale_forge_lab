@@ -20,8 +20,18 @@ class BookController extends Controller
     {
         $genres = $this->bookService->getAllBookGenres();
 
-        $books = $this->bookService
-            ->getAllBooks($request->input('sort'), $request->input('genre'), $request->input('language'));
+        $sort = $request->input('sort', 1);
+        $genre = $request->input('genre', null);
+        $language = $request->input('language', null);
+        $author = $request->input('author', null);
+        $ageRating = $request->input('ageRating', null);
+        $fromDate = $request->input('fromDate', null);
+        $toDate = $request->input('toDate', null);
+        $minMembers = $request->input('minMembers', null);
+        $maxMembers = $request->input('maxMembers', null);
+
+        $books = $this->bookService->getAllBooks($sort, $genre, $language, $author, $ageRating, $fromDate, $toDate, $minMembers, $maxMembers);
+
         return Inertia::render('Books/Index', [
             'books' => $books,
             'allGenres' => $genres,

@@ -65,7 +65,7 @@ class BookService
             ->exists();
     }
 
-    public function getAllBooks($sort = 1, $genre = null, $language = null)
+    public function getAllBooks($sort = 1, $genre = null, $language = null, $author = null, $ageRating = null, $fromDate = null, $toDate = null, $minMembers = null, $maxMembers = null)
     {
         $query = Book::query()->where('is_published', true);
 
@@ -75,8 +75,32 @@ class BookService
             });
         }
 
+        if ($author) {
+            $query->where('author_name', 'like', '%' . $author . '%');
+        }
+
         if ($language) {
             $query->where('language', $language);
+        }
+
+        if ($ageRating) {
+            $query->where('age_rating', $ageRating);
+        }
+
+        if ($minMembers) {
+            $query->where('members', '>=', $minMembers);
+        }
+
+        if ($maxMembers) {
+            $query->where('members', '>=', $maxMembers);
+        }
+
+        if ($fromDate) {
+            $query->where('published_at', '>=', $fromDate);
+        }
+
+        if ($toDate) {
+            $query->where('published_at', '<=', $toDate);
         }
 
         if ($sort == 2){
@@ -88,7 +112,7 @@ class BookService
         } else if ($sort == 5){
             $query->orderBy('published_at', 'desc');
         } else {
-            $query->orderBy('community_rating', 'desc');
+            $query->orderByRaw('COALESCE(community_rating, 0) DESC');
         }
 
         return $query->get();
@@ -125,6 +149,10 @@ class BookService
                 'value' => $request['value']
             ]
         );
+        $book = Book::find($bookId);
+        $avgRating = $book->ratings()->avg('value');
+        $book->community_rating = number_format($avgRating, 2, '.', '');
+        $book->save();
     }
 
     public function deleteBookRating($bookId): void

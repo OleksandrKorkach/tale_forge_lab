@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookCommentController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookListController;
+use App\Http\Controllers\CommunityClubController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
 use App\Http\Controllers\PageController;
@@ -40,7 +41,7 @@ Route::get('books/{book}/pages/{page}', [PageController::class, 'show'])->name('
 Route::delete('/blocks/{block}', [PageController::class, 'destroyBlock'])->name('pages.blocks.destroy');
 Route::post('books/{book}/page/{page}', [PageController::class, 'storeBlock'])->name('pages.blocks.store');
 
-Route::delete('comments/{commentId}/delete', [BookCommentController::class, 'deleteComment'])->name('books.comment.delete');
+Route::delete('comments/{commentId}/delete', [BookCommentController::class, 'delete'])->name('books.comment.delete');
 Route::post('comments/{commentId}/likes', [BookCommentController::class, 'toggleLike'])->name('comments.store');
 
 Route::post('favorite-books/toggle', [BookListController::class, 'toggleFavorite'])->name('favorite-books.toggle');
@@ -62,6 +63,6 @@ Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.bo
 Route::post('ratings/{book}', [BookController::class, 'setBookRating'])->name('books.set-rating');
 Route::delete('ratings/{bookId}', [BookController::class, 'deleteBookRating'])->name('books.delete-rating');
 
-Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+Route::get('/community', [CommunityClubController::class, 'index'])->name('community.index');
 
 require __DIR__.'/auth.php';
