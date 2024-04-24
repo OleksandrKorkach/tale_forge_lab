@@ -4,6 +4,7 @@ use App\Http\Controllers\BookCommentController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookListController;
 use App\Http\Controllers\CommunityClubController;
+use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
 use App\Http\Controllers\PageController;
@@ -63,6 +64,14 @@ Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.bo
 Route::post('ratings/{book}', [BookController::class, 'setBookRating'])->name('books.set-rating');
 Route::delete('ratings/{bookId}', [BookController::class, 'deleteBookRating'])->name('books.delete-rating');
 
-Route::get('/community', [CommunityClubController::class, 'index'])->name('community.index');
+Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
+Route::get('/community/clubs', [CommunityController::class, 'clubs'])->name('community.clubs.index');
+Route::get('/community/clubs/{clubId}', [CommunityController::class, 'showClub'])->name('community.clubs.show');
+Route::get('/community/topics', [CommunityController::class, 'topics'])->name('community.topics.index');
+Route::get('/community/topics/{topicId}', [CommunityController::class, 'showTopic'])->name('community.topics.show');
+Route::post('/community/topics/{topicId}', [CommunityController::class, 'storeComment'])->name('community.topics.comments.store');
+Route::delete('/topics/comments/{commentId}', [CommunityController::class, 'deleteComment'])->name('topics.comments.delete');
+Route::post('/test/topic/create', [CommunityController::class, 'testTopic']);
+Route::delete('/community/topics/{topicId}', [CommunityController::class, 'deleteTopic'])->name('community.topics.delete');
 
 require __DIR__.'/auth.php';

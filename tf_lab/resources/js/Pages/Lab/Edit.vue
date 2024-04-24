@@ -142,7 +142,7 @@ export default {
             }
         },
         destroyBook() {
-            if (confirm('Are you sure you want to delete this organization?')) {
+            if (confirm('Are you sure you want to delete this book?')) {
                 this.$inertia.delete(`/lab/delete-book/${this.book.id}`)
             }
         },

@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clubs', function (Blueprint $table) {
+        Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->text('description');
+            $table->string('username');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('members');
+            $table->unsignedBigInteger('club_id')->nullable();
+            $table->unsignedBigInteger('number_of_replies')->default(0);
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('club_id')->references('id')->on('clubs');
 
             $table->timestamps();
         });
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clubs');
+        Schema::dropIfExists('topics');
     }
 };
