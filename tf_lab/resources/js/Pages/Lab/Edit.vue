@@ -31,8 +31,9 @@ import {Cropper} from "vue-advanced-cropper";
                                     <InputLabel class="pl-0.5">Language</InputLabel>
                                     <select class="rounded w-full" v-model="form.language">
                                         <option :value="null" />
-                                        <option value="English">English</option>
-                                        <option value="Ukrainian">Ukrainian</option>
+                                        <option v-for="language in allLanguages" :key="language" :value="language">
+                                            {{ language }}
+                                        </option>
                                     </select>
                                 </div>
 
@@ -40,10 +41,9 @@ import {Cropper} from "vue-advanced-cropper";
                                     <InputLabel class="pl-0.5">Age rating</InputLabel>
                                     <select class="rounded w-full" v-model="form.age_rating">
                                         <option :value="null" />
-                                        <option value="R">R</option>
-                                        <option value="18+">18+</option>
-                                        <option value="16+">16+</option>
-                                        <option value="21+">21+</option>
+                                        <option v-for="ageRating in allAgeRatings" :key="ageRating" :value="ageRating">
+                                            {{ ageRating }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -144,6 +144,8 @@ export default {
         genres: Array,
         allGenres: Array,
         tags: Array,
+        allLanguages: Array,
+        allAgeRatings: Array,
     },
     components: {
         Head,

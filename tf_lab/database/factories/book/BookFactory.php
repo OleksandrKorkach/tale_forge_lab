@@ -5,6 +5,8 @@ namespace Database\Factories\book;
 use App\Models\book\Book;
 use App\Models\book\BookComment;
 use App\Models\book\BookGenre;
+use App\Models\book\enums\BookAgeRating;
+use App\Models\book\enums\BookLanguages;
 use App\Models\user\User;
 use App\Utils\DateUtil;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,34 +26,10 @@ class BookFactory extends Factory
             'published_at' => $published_at,
             'year' => $published_at->format('Y'),
             'season' => DateUtil::getSeason($published_at),
-            'language' => $this->faker->randomElement([
-                "English",
-                "Chinese",
-                "Hindi",
-                "Spanish",
-                "French",
-                "Arabic",
-                "Bengali",
-                "Ukrainian",
-                "Portuguese",
-                "Urdu",
-                "Indonesian",
-                "German",
-                "Japanese",
-                "Swahili",
-                "Marathi",
-                "Telugu",
-                "Turkish",
-                "Korean",
-                "Vietnamese",
-                "Tamil"
-            ]),
+            'language' => $this->faker->randomElement(BookLanguages::values()),
             'quote' => $this->faker->sentence,
             'pages' => $this->faker->numberBetween(100, 500),
-            'age_rating' => $this->faker->randomElement([
-                "0+", "3+", "5+", "7+", "9+", "10+", "12+", "14+", "16+", "18+",
-                "AA", "PG", "GR", "MT", "ED", "YA", "AF", "ANF", "PS", "R"
-            ]),
+            'age_rating' => $this->faker->randomElement(BookAgeRating::values()),
             'is_published' => true,
             'community_rating' => $this->faker->randomFloat(2, 3, 10),
             'members' => $this->faker->numberBetween(300, 2400),

@@ -2,6 +2,7 @@
 
 namespace App\Models\book;
 
+use App\Models\book\enums\BookLanguages;
 use App\Models\page\Page;
 use App\Models\user\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

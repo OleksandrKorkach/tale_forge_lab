@@ -38,7 +38,7 @@ import InputLabel from "@/Components/InputLabel.vue";
                                         <select v-model="selectedLanguage" @change="setLanguage(selectedLanguage)"
                                                 class="pl-3 pr-8 py-2 rounded-lg w-full">
                                             <option value="">All languages</option>
-                                            <option v-for="language in languages" :key="language" :value="language">
+                                            <option v-for="language in allLanguages" :key="language" :value="language">
                                                 {{ language }}
                                             </option>
                                         </select>
@@ -46,7 +46,7 @@ import InputLabel from "@/Components/InputLabel.vue";
                                         <select v-model="selectedAgeRating" @change="setAgeRating(selectedAgeRating)"
                                                 class="pl-3 pr-8 py-2 rounded-lg w-full">
                                             <option value="">All ages</option>
-                                            <option v-for="ageRating in ageRatings" :key="ageRating" :value="ageRating">
+                                            <option v-for="ageRating in allAgeRatings" :key="ageRating" :value="ageRating">
                                                 {{ ageRating }}
                                             </option>
                                         </select>
@@ -163,6 +163,8 @@ export default {
     props: {
         books: Array,
         allGenres: Array,
+        allLanguages: Array,
+        allAgeRatings: Array,
     },
     data() {
         return {
@@ -179,32 +181,6 @@ export default {
             selectedLanguage: '',
             searchAuthor: '',
             selectedAgeRating: '',
-            languages: [
-                "English",
-                "Chinese",
-                "Hindi",
-                "Spanish",
-                "French",
-                "Arabic",
-                "Bengali",
-                "Ukrainian",
-                "Portuguese",
-                "Urdu",
-                "Indonesian",
-                "German",
-                "Japanese",
-                "Swahili",
-                "Marathi",
-                "Telugu",
-                "Turkish",
-                "Korean",
-                "Vietnamese",
-                "Tamil"
-            ],
-            ageRatings: [
-                "0+", "3+", "5+", "7+", "9+", "10+", "12+", "14+", "16+", "18+",
-                "AA", "PG", "GR", "MT", "ED", "YA", "AF", "ANF", "PS", "R"
-            ],
             sortOptions: [
                 {value: '1', text: 'Top rated'},
                 {value: '2', text: 'Top popular'},

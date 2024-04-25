@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\book\Book;
+use App\Models\book\enums\BookAgeRating;
+use App\Models\book\enums\BookLanguages;
 use App\Services\BookService;
 use App\Services\LabService;
 use Illuminate\Http\RedirectResponse;
@@ -32,9 +34,13 @@ class LabController extends Controller
     public function create(): Response
     {
         $allGenres = $this->bookService->getAllBookGenres();
+
+        $allAgeRatings = BookAgeRating::values();
+        $allLanguages = BookLanguages::values();
         return Inertia::render('Lab/Create', [
             'allGenres' => $allGenres,
-
+            'allAgeRatings' => $allAgeRatings,
+            'allLanguages' => $allLanguages,
         ]);
     }
 
@@ -55,12 +61,16 @@ class LabController extends Controller
         $book = $this->bookService->getBook($bookId);
         $genres = $this->bookService->getBookGenres($bookId);
         $allGenres = $this->bookService->getAllBookGenres();
+        $allAgeRatings = BookAgeRating::values();
+        $allLanguages = BookLanguages::values();
         $tags = $this->bookService->getBookTags($bookId);
         return Inertia::render('Lab/Edit', [
             'book' => $book,
             'genres' => $genres,
             'tags' => $tags,
             'allGenres' => $allGenres,
+            'allAgeRatings' => $allAgeRatings,
+            'allLanguages' => $allLanguages,
         ]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\book\enums\BookAgeRating;
+use App\Models\book\enums\BookLanguages;
 use App\Services\BookService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,6 +21,8 @@ class BookController extends Controller
     public function index(Request $request): Response
     {
         $genres = $this->bookService->getAllBookGenres();
+        $allAgeRatings = BookAgeRating::values();
+        $allLanguages = BookLanguages::values();
 
         $sort = $request->input('sort', 1);
         $genre = $request->input('genre', null);
@@ -35,6 +39,8 @@ class BookController extends Controller
         return Inertia::render('Books/Index', [
             'books' => $books,
             'allGenres' => $genres,
+            'allAgeRatings' => $allAgeRatings,
+            'allLanguages' => $allLanguages,
             'genre' => $request->input('genre', null),
         ]);
     }
