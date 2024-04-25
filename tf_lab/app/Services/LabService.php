@@ -21,15 +21,19 @@ class LabService
 
     public function storeBook(Request $request): void
     {
+        $path = $request->file('image')?->store('public/images');
+        $publicPath = str_replace('public/', '/storage/', $path);
         $book = Book::create([
             'title' => $request['title'],
             'description' => $request['description'],
             'quote' => $request['quote'],
+            'url' => !empty($publicPath) ? $publicPath : null,
             'language' => $request['language'],
             'age_rating' => $request['age_rating'],
             'author_name' => User::find(Auth::id())->name,
             'user_id' => Auth::id(),
         ]);
+
 
         $genreIds = $request->input('genres', []);
         $book->genres()->sync($genreIds);
@@ -43,15 +47,28 @@ class LabService
     public function updateBook(Request $request, $bookId): void
     {
         $book = Book::findOrFail($bookId);
-        $book->update([
+
+        $publicPath = null;
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/images');
+            $publicPath = str_replace('public/', '/storage/', $path);
+        }
+
+        $updateData = [
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'quote' => $request->input('quote'),
             'language' => $request->input('language'),
             'age_rating' => $request->input('age_rating'),
-        ]);
-        $genreIds = $request->input('genres', []);
+        ];
 
+        if ($publicPath) {
+            $updateData['url'] = $publicPath;
+        }
+
+        $book->update($updateData);
+
+        $genreIds = $request->input('genres', []);
         $book->genres()->sync($genreIds);
     }
 

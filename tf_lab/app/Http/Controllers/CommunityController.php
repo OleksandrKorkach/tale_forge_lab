@@ -6,6 +6,7 @@ use App\Models\community\Club;
 use App\Models\community\Topic;
 use App\Models\community\TopicComment;
 use App\Models\user\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

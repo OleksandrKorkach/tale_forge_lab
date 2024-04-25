@@ -26,6 +26,7 @@ class Book extends Model
         'quote',
         'pages',
         'age_rating',
+        'url',
         'user_id'
     ];
 

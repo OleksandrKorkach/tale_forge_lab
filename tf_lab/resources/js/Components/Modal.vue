@@ -10,6 +10,10 @@ const props = defineProps({
         type: String,
         default: '2xl',
     },
+    maxHeight: {
+        type: String,
+        default: '2xl',
+    },
     closeable: {
         type: Boolean,
         default: true,
@@ -54,6 +58,18 @@ const maxWidthClass = computed(() => {
         md: 'sm:max-w-md',
         lg: 'sm:max-w-lg',
         xl: 'sm:max-w-xl',
+        cropper: 'max-w-[500px]',
+        '2xl': 'sm:max-w-2xl',
+    }[props.maxWidth];
+});
+
+const maxHeightClass = computed(() => {
+    return {
+        sm: 'sm:max-w-sm',
+        md: 'sm:max-w-md',
+        lg: 'sm:max-w-lg',
+        xl: 'sm:max-w-xl',
+        cropper: 'max-h-[600px]',
         '2xl': 'sm:max-w-2xl',
     }[props.maxWidth];
 });
@@ -87,7 +103,7 @@ const maxWidthClass = computed(() => {
                     <div
                         v-show="show"
                         class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
-                        :class="maxWidthClass"
+                        :class="maxWidthClass + ' ' + maxHeightClass"
                     >
                         <slot v-if="show" />
                     </div>

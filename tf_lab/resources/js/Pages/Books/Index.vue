@@ -137,7 +137,12 @@ import InputLabel from "@/Components/InputLabel.vue";
                                     </div>
                                     <Link :href="`/books/${book.id}`"
                                           class="flex bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
-                                        <img src="/images/tf_lab_logo.webp" alt="Logo"/>
+                                        <div v-if="!book.url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
+                                            <img src="/images/tf_lab_logo.webp"  alt="Logo" />
+                                        </div>
+                                        <div v-else class=" ">
+                                            <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
+                                        </div>
                                     </Link>
                                 </div>
                                 <div class="flex items-center justify-center w-auto">

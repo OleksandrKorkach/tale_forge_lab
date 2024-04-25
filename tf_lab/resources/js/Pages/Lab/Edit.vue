@@ -3,6 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
+import Modal from "@/Components/Modal.vue";
+import {Cropper} from "vue-advanced-cropper";
 </script>
 
 <template>
@@ -69,9 +71,40 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                                 </div>
                             </div>
 
-
                             <div class="mt-2">
                                 <textarea class="w-full min-h-[150px]" v-model="form.description" type="text" placeholder="Description" />
+                            </div>
+
+                            <div class="flex gap-4 mb-2">
+                                <div v-if="book.url" class="h-[300px] w-[250px]">
+                                    <img :src="`${book.url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
+                                </div>
+                                <div>
+                                    <InputLabel>
+                                        Upload photo
+                                    </InputLabel>
+                                    <input type="file" @change="loadImage" accept="image/*">
+                                    <Modal :show="showImageModal" @close="showImageModal = false" max-width="cropper" max-height="cropper">
+                                        <div>
+                                            <cropper
+                                                v-if="image"
+                                                style="height: 500px; width: 500px; background: #DDD;"
+                                                class="cropper"
+                                                :src="image"
+                                                :stencil-props="{
+                                              aspectRatio: 5/6
+                                            }"
+                                                @change="change"
+                                            ></cropper>
+                                        </div>
+                                        <div class="p-2 flex justify-end">
+                                            <button @click="applyImage" class="bg-gray-900 text-white rounded-lg px-3 py-2" >
+                                                Apply
+                                            </button>
+                                        </div>
+
+                                    </Modal>
+                                </div>
                             </div>
                         </form>
                         <div class="flex justify-between gap-1.5 mt-2">
@@ -101,6 +134,9 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 import { Head, Link } from '@inertiajs/vue3'
 import TextInput from "@/Components/TextInput.vue";
 import Draggable from 'vuedraggable';
+import {Cropper} from "vue-advanced-cropper";
+
+import 'vue-advanced-cropper/dist/style.css';
 
 export default {
     props: {
@@ -113,11 +149,15 @@ export default {
         Head,
         Link,
         TextInput,
-        Draggable
+        Draggable,
+        Cropper
     },
     remember: 'form',
     data() {
         return {
+            image: null,
+            croppedImageBlob: null,
+            showImageModal: false,
             form: this.$inertia.form({
                 title: this.book.title,
                 description: this.book.description,
@@ -125,6 +165,7 @@ export default {
                 language: this.book.language,
                 age_rating: this.book.age_rating,
                 genres: [],
+                image: null,
             }),
             genresInFirstBlock: this.genres,
             genresInSecondBlock: this.allGenres.filter(allGenre =>
@@ -134,7 +175,10 @@ export default {
     methods: {
         updateBook() {
             this.form.genres = this.genresInFirstBlock.map(genre => genre.id);
-            this.form.put(`/lab/update-book/${this.book.id}`);
+            if (this.croppedImageBlob) {
+                this.form.image = this.croppedImageBlob;
+            }
+            this.form.post(`/lab/update-book/${this.book.id}`);
         },
         publishBook() {
             if (confirm('Are you ready to publish this book?')) {
@@ -144,6 +188,36 @@ export default {
         destroyBook() {
             if (confirm('Are you sure you want to delete this book?')) {
                 this.$inertia.delete(`/lab/delete-book/${this.book.id}`)
+            }
+        },
+        loadImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (this.book.url) {
+                    URL.revokeObjectURL(this.book.url);
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.image = e.target.result;
+                    this.showImageModal = true;
+                };
+                reader.readAsDataURL(file);
+                this.book.url = URL.createObjectURL(file);
+            }
+        },
+        change({ coordinates, canvas }) {
+            console.log(coordinates, canvas);
+            console.log(new Date());
+            canvas.toBlob(blob => {
+                this.croppedImageBlob = blob;
+                this.book.url = URL.createObjectURL(blob);
+            }, 'image/jpeg');
+        },
+        applyImage() {
+            this.showImageModal = false;
+            if (this.croppedImageBlob) {
+                this.book.url = URL.createObjectURL(this.croppedImageBlob);
             }
         },
     },

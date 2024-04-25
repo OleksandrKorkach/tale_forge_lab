@@ -22,6 +22,7 @@ return new class extends Migration
             $table->float('community_rating')->nullable();
             $table->boolean('is_published')->default(false);
             $table->unsignedBigInteger('user_id');
+            $table->text('url')->nullable();
             $table->unsignedBigInteger('members')->default(0);
             $table->unsignedBigInteger('favorite_members')->default(0);
 

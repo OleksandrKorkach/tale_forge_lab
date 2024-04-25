@@ -22,11 +22,18 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                     </div>
                     <div class="flex flex-wrap mt-4">
                         <template v-for="(book, index) in books" :key="Index">
-                            <div class="w-[25%] relative border-white border-4 bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
+                            <div class="w-[25%] relative border-white border-4 bg-gray-200">
                                 <Link :href="`/lab/edit/${book.id}`">
-                                    <img src="/images/tf_lab_logo.webp"  alt="Logo" />
-                                    <div class="p-2 flex justify-center text-center font-semibold">{{ book.title }}</div>
+                                    <div v-if="!book.url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
+                                        <img src="/images/tf_lab_logo.webp"  alt="Logo" />
+                                    </div>
+                                    <div v-else class=" ">
+                                        <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
+                                    </div>
                                 </Link>
+                                <div class="p-2 flex justify-center text-center text-sm">
+                                    {{ book.title }}
+                                </div>
                                 <button @click="publishBook(book.id)" v-if="book.is_published === true" class="absolute flex items-center justify-center top-2 right-2 rounded " title="public">
                                     <span class="material-symbols-outlined text-[40px] text-green-400 hover:text-green-500">
                                         public

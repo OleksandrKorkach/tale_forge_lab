@@ -56,7 +56,7 @@ Route::delete('lists/{listId}/remove-book/{bookId}', [BookListController::class,
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 Route::get('/lab/create', [LabController::class, 'create'])->name('lab.create');
 Route::post('/lab/store-book', [LabController::class, 'storeBook'])->name('lab.book.store');
-Route::put('/lab/update-book/{book}', [LabController::class, 'updateBook'])->name('lab.book.update');
+Route::post('/lab/update-book/{book}', [LabController::class, 'updateBook'])->name('lab.book.update');
 Route::delete('/lab/delete-book/{bookId}', [LabController::class, 'deleteBook'])->name('lab.book.delete');
 Route::post('/lab/publish-book/{book}', [LabController::class, 'publishBook'])->name('lab.book.publish');
 Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.book.edit');
@@ -73,5 +73,7 @@ Route::post('/community/topics/{topicId}', [CommunityController::class, 'storeCo
 Route::delete('/topics/comments/{commentId}', [CommunityController::class, 'deleteComment'])->name('topics.comments.delete');
 Route::post('/test/topic/create', [CommunityController::class, 'testTopic']);
 Route::delete('/community/topics/{topicId}', [CommunityController::class, 'deleteTopic'])->name('community.topics.delete');
+
+Route::post('/upload-cropped-image', [CommunityController::class, 'uploadImage'])->name('upload.image');
 
 require __DIR__.'/auth.php';
