@@ -25,7 +25,7 @@ class LabController extends Controller
 
     public function index(): Response
     {
-        $books = $this->labService->getUserBooks();
+        $books = $this->labService->getAuthUserBooks();
         return Inertia::render('Lab/Index', [
             'books' => $books,
         ]);

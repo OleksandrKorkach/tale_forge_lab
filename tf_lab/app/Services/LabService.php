@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class LabService
 {
 
-    public function getUserBooks(): \Illuminate\Database\Eloquent\Collection|array
+    public function getAuthUserBooks(): \Illuminate\Database\Eloquent\Collection|array
     {
         return Book::query()
             ->where('user_id', Auth::id())
@@ -21,8 +21,8 @@ class LabService
 
     public function storeBook(Request $request): void
     {
-        $path = $request->file('image')?->store('public/images');
-        $publicPath = str_replace('public/', '/storage/', $path);
+        $publicPath = $this->saveImage($request->file('image'));
+
         $book = Book::create([
             'title' => $request['title'],
             'description' => $request['description'],
@@ -34,9 +34,7 @@ class LabService
             'user_id' => Auth::id(),
         ]);
 
-
-        $genreIds = $request->input('genres', []);
-        $book->genres()->sync($genreIds);
+        $this->syncGenres($book, $request->input('genres', []));
 
         Page::create([
             'book_id' => $book->id,
@@ -48,11 +46,7 @@ class LabService
     {
         $book = Book::findOrFail($bookId);
 
-        $publicPath = null;
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/images');
-            $publicPath = str_replace('public/', '/storage/', $path);
-        }
+        $publicPath = $this->saveImage($request->file('image'));
 
         $updateData = [
             'title' => $request->input('title'),
@@ -60,16 +54,11 @@ class LabService
             'quote' => $request->input('quote'),
             'language' => $request->input('language'),
             'age_rating' => $request->input('age_rating'),
+            'url' => $publicPath ?? $book->url,
         ];
 
-        if ($publicPath) {
-            $updateData['url'] = $publicPath;
-        }
-
         $book->update($updateData);
-
-        $genreIds = $request->input('genres', []);
-        $book->genres()->sync($genreIds);
+        $this->syncGenres($book, $request->input('genres', []));
     }
 
     public function deleteBook($bookId): void
@@ -87,6 +76,21 @@ class LabService
             $book->published_at = now();
         }
         $book->save();
+    }
+
+    private function saveImage($image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        $path = $image->store('public/images');
+        return str_replace('public/', '/storage/', $path);
+    }
+
+    private function syncGenres(Book $book, array $genreIds): void
+    {
+        $book->genres()->sync($genreIds);
     }
 
 

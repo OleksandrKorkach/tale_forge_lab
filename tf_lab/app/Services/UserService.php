@@ -6,7 +6,6 @@ use App\Models\user\User;
 
 class UserService
 {
-
     public function getReadListCount($userId)
     {
         $user = $this->getUser($userId);
