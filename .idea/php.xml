@@ -129,6 +129,12 @@
       <path value="$PROJECT_DIR$/tf_lab/vendor/dragonmantank/cron-expression" />
       <path value="$PROJECT_DIR$/tf_lab/vendor/graham-campbell/result-type" />
       <path value="$PROJECT_DIR$/tf_lab/vendor/spatie/laravel-permission" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/markbaker/complex" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/maatwebsite/excel" />
+      <path value="$PROJECT_DIR$/tf_lab/vendor/maennchen/zipstream-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

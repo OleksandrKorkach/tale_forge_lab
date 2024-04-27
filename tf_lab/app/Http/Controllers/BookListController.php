@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BookListExport;
 use App\Models\book\Book;
 use App\Models\book\BookList;
 use App\Models\user\User;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookListController extends Controller
 {
@@ -77,4 +79,11 @@ class BookListController extends Controller
         }
     }
 
+    public function export($listId)
+    {
+        $date = date('Y-m-d_H-i-s');
+        $filename = "export_list{$listId}_{$date}.xlsx";
+
+        return Excel::download(new BookListExport($listId), $filename);
+    }
 }

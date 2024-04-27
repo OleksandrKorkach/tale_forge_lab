@@ -50,8 +50,7 @@ Route::post('booklist/toggle', [BookListController::class, 'toggleReadList'])->n
 //Route::post('custom-list/{name}/toggle', [BookListController::class, 'toggleCustomList'])->name('customlist.toggle');
 Route::get('lists/{listId}', [BookListController::class, 'show'])->name('lists.show');
 Route::delete('lists/{listId}/remove-book/{bookId}', [BookListController::class, 'toggleBook'])->name('lists.books.remove');
-
-
+Route::get('lists/export/{listId}', [BookListController::class, 'export']);
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 Route::get('/lab/create', [LabController::class, 'create'])->name('lab.create');

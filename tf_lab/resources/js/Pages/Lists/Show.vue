@@ -13,7 +13,12 @@ import NoBookImage from "@/Components/NoBookImage.vue";
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow-2xl">
-                    <h1 class="text-2xl font-semibold mb-2">{{ list.name }} ({{ list.books.length }})</h1>
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="text-2xl font-semibold">{{ list.name }} ({{ list.books.length }})</div>
+                      <button @click="downloadExcel" class="bg-gray-900 hover:bg-gray-700 text-white py-1 px-2 rounded-md">
+                        Export
+                      </button>
+                    </div>
                     <div class="flex flex-col gap-1">
                         <template v-for="(book, index) in list.books" :key="index">
                             <div  class="flex border-black border-1 bg-gray-200">
@@ -61,7 +66,7 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                                     </div>
                                 </div>
                                 <div class="flex flex-col mx-auto w-[13%] justify-center p-4">
-                                    <button @click="removeFromList(book.id)" class="bg-gray-900 hover:vg-gray-700 text-white py-1 px-2 rounded-md">
+                                    <button @click="removeFromList(book.id)" class="bg-gray-900 hover:bg-gray-700 text-white py-1 px-2 rounded-md">
                                         Remove
                                     </button>
                                 </div>
@@ -88,6 +93,10 @@ export default {
                 });
             }
         },
+      downloadExcel() {
+        const listId = this.list.id;
+        window.location.href = `/lists/export/${listId}`;
+      }
     }
 }
 </script>
