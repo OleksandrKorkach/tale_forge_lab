@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\book\BookSearchParams;
 use App\Models\book\enums\BookAgeRating;
 use App\Models\book\enums\BookLanguages;
 use App\Services\BookService;
@@ -24,24 +25,15 @@ class BookController extends Controller
         $allAgeRatings = BookAgeRating::values();
         $allLanguages = BookLanguages::values();
 
-        $sort = $request->input('sort', 1);
-        $genre = $request->input('genre', null);
-        $language = $request->input('language', null);
-        $author = $request->input('author', null);
-        $ageRating = $request->input('ageRating', null);
-        $fromDate = $request->input('fromDate', null);
-        $toDate = $request->input('toDate', null);
-        $minMembers = $request->input('minMembers', null);
-        $maxMembers = $request->input('maxMembers', null);
-
-        $books = $this->bookService->getAllBooks($sort, $genre, $language, $author, $ageRating, $fromDate, $toDate, $minMembers, $maxMembers);
+        $bookParams = new BookSearchParams($request->all());
+        $books = $this->bookService->getAllBooks($bookParams);
 
         return Inertia::render('Books/Index', [
             'books' => $books,
             'allGenres' => $genres,
             'allAgeRatings' => $allAgeRatings,
             'allLanguages' => $allLanguages,
-            'genre' => $request->input('genre', null),
+            'genre' => $request->input('genre'),
         ]);
     }
 

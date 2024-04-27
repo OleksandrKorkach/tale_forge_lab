@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
+import NoBookImage from "@/Components/NoBookImage.vue";
 </script>
 
 <template>
@@ -21,12 +22,10 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                         </button>
                     </div>
                     <div class="flex flex-wrap mt-4">
-                        <template v-for="(book, index) in books" :key="Index">
+                        <template v-for="book in books" >
                             <div class="w-[25%] relative border-white border-4 bg-gray-200">
                                 <Link :href="`/lab/edit/${book.id}`">
-                                    <div v-if="!book.url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
-                                        <img src="/images/tf_lab_logo.webp"  alt="Logo" />
-                                    </div>
+                                    <NoBookImage v-if="!book.url" />
                                     <div v-else class=" ">
                                         <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
                                     </div>

@@ -10,6 +10,10 @@ import TextInput from "@/Components/TextInput.vue";
 import AuthorName from "@/Pages/Books/partial/book-tabs/AuthorName.vue";
 import AgeRating from "@/Pages/Books/partial/book-tabs/AgeRating.vue";
 import InputLabel from "@/Components/InputLabel.vue";
+import LanguageSelector from "@/Pages/Books/partial/search/LanguageSelector.vue";
+import AgeRatingSelector from "@/Pages/Books/partial/search/AgeRatingSelector.vue";
+import SortOptions from "@/Pages/Books/partial/search/SortOptions.vue";
+import NoBookImage from "@/Components/NoBookImage.vue";
 </script>
 
 <template>
@@ -21,11 +25,7 @@ import InputLabel from "@/Components/InputLabel.vue";
                 <div class="p-8 bg-white shadow sm:rounded-lg min-h-screen">
                     <div class="flex">
                         <div class="flex flex-col w-2/12 items-center justify-between border-r-[1px] border-gray-400 pr-2">
-                            <button v-for="option in sortOptions" :key="option.value"
-                                    :class="{'bg-blue-500 hover:bg-blue-600 text-white': sort === option.value, 'bg-gray-200 hover:bg-gray-300': sort !== option.value}"
-                                    @click="setSort(option.value)" class="w-full px-3 py-1.5 rounded-lg">
-                                {{ option.text }}
-                            </button>
+                            <SortOptions :selected-sort="sort" @sort-changed="setSort" />
                         </div>
                         <div class="gap-1 pl-2 w-10/12">
                             <div class="flex">
@@ -34,22 +34,8 @@ import InputLabel from "@/Components/InputLabel.vue";
                                         <Link :href="`/books`" class="flex justify-center items-center bg-gray-200 hover:bg-red-500 hover:text-white w-full rounded-lg border-[2px]">
                                             Clear filter
                                         </Link>
-
-                                        <select v-model="selectedLanguage" @change="setLanguage(selectedLanguage)"
-                                                class="pl-3 pr-8 py-2 rounded-lg w-full">
-                                            <option value="">All languages</option>
-                                            <option v-for="language in allLanguages" :key="language" :value="language">
-                                                {{ language }}
-                                            </option>
-                                        </select>
-
-                                        <select v-model="selectedAgeRating" @change="setAgeRating(selectedAgeRating)"
-                                                class="pl-3 pr-8 py-2 rounded-lg w-full">
-                                            <option value="">All ages</option>
-                                            <option v-for="ageRating in allAgeRatings" :key="ageRating" :value="ageRating">
-                                                {{ ageRating }}
-                                            </option>
-                                        </select>
+                                        <LanguageSelector :all-languages="allLanguages" @language-changed="setLanguage" />
+                                        <AgeRatingSelector :all-age-ratings="allAgeRatings" @age-rating-changed="setAgeRating" />
                                     </div>
                                     <div class="flex space-x-1 mt-1">
 
@@ -72,7 +58,6 @@ import InputLabel from "@/Components/InputLabel.vue";
                                             placeholder="Max members"
                                             v-model="maxMembers"
                                         />
-
                                     </div>
                                 </div>
 
@@ -80,17 +65,13 @@ import InputLabel from "@/Components/InputLabel.vue";
 
                                 <div class="w-[30%] justify- flex flex-col gap-1 px-2">
                                     <div class="flex items-center gap-2 justify-between ">
-                                        <input-label class="text-lg">
-                                            From
-                                        </input-label>
-                                        <input type="date" @input="debouncedUpdateBooks" v-model="fromDate" id="" class="rounded-lg">
+                                        <input-label class="text-lg">From</input-label>
+                                        <input type="date" @input="updateBooks" v-model="fromDate" id="" class="rounded-lg">
                                     </div>
 
                                     <div class="flex items-center gap-2 justify-between">
-                                        <input-label class="text-md">
-                                            To
-                                        </input-label>
-                                        <input type="date" @input="debouncedUpdateBooks" v-model="toDate" name="" id="" class="rounded-lg">
+                                        <input-label class="text-md">To</input-label>
+                                        <input type="date" @input="updateBooks" v-model="toDate" name="" id="" class="rounded-lg">
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +81,6 @@ import InputLabel from "@/Components/InputLabel.vue";
                             </div>
 
                             <div class="flex flex-wrap gap-1">
-
                                 <button @click="resetGenre"
                                         :class="{'bg-blue-500 hover:bg-blue-600 text-white': selectedGenre === null, 'bg-gray-200 hover:bg-gray-300': selectedGenre !== null}"
                                         class="px-3 py-2 rounded-lg">
@@ -137,10 +117,8 @@ import InputLabel from "@/Components/InputLabel.vue";
                                     </div>
                                     <Link :href="`/books/${book.id}`"
                                           class="flex bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
-                                        <div v-if="!book.url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
-                                            <img src="/images/tf_lab_logo.webp"  alt="Logo" />
-                                        </div>
-                                        <div v-else class=" ">
+                                        <NoBookImage v-if="!book.url" />
+                                        <div v-else>
                                             <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
                                         </div>
                                     </Link>
@@ -178,16 +156,7 @@ export default {
             toDate: '',
             minMembers: '',
             maxMembers: '',
-            selectedLanguage: '',
             searchAuthor: '',
-            selectedAgeRating: '',
-            sortOptions: [
-                {value: '1', text: 'Top rated'},
-                {value: '2', text: 'Top popular'},
-                {value: '3', text: 'Top favorite'},
-                {value: '4', text: 'Favorite %'},
-                {value: '5', text: 'Latest'},
-            ],
         };
     },
     mounted() {
@@ -218,12 +187,10 @@ export default {
         },
         setLanguage(language) {
             this.language = language;
-            this.selectedLanguage = language;
             this.updateBooks();
         },
         setAgeRating(ageRating) {
             this.ageRating = ageRating;
-            this.selectedAgeRating = ageRating;
             this.updateBooks();
         },
         resetGenre() {

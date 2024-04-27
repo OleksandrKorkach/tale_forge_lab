@@ -28,7 +28,8 @@ class Book extends Model
         'pages',
         'age_rating',
         'url',
-        'user_id'
+        'user_id',
+        'ai_generated',
     ];
 
     public function pages(): HasMany

@@ -14,10 +14,9 @@ class BookListController extends Controller
 {
     public function show($listId): Response
     {
-        $list = BookList::find($listId);
-        $books = $list->books ?: [];
+        $list = BookList::with('books.genres')->find($listId);
+
         return Inertia::render('Lists/Show', [
-            'books' => $books,
             'list' => $list,
         ]);
     }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\book\Book;
 use App\Models\book\BookGenre;
 use App\Models\book\BookRating;
+use App\Models\book\BookSearchParams;
 use App\Models\book\enums\BookAgeRating;
 use App\Models\book\enums\BookLanguages;
 use App\Models\user\User;
@@ -31,9 +32,8 @@ class BookService
         $isFavourite = Auth::id() ? $this->isBookInUserFavoriteList($id, Auth::id()) : null;
         $inList = Auth::id() ? $this->isBookInUserReadList($id, Auth::id()) : null;
         $rating = $book->ratings->where('user_id', auth()->id())->first();
-        if (!$rating) {
-            $rating = new BookRating();
-        }
+        $rating = $rating ?: new BookRating();
+
         $likedComments = $this->bookCommentService->userLikedCommentsByBook(Auth::id(), $id);
         $dislikedComments = $this->bookCommentService->userDislikedCommentsByBook(Auth::id(), $id);
         return [
@@ -47,77 +47,6 @@ class BookService
             'inList' => $inList,
             'rating' => $rating,
         ];
-    }
-
-    public function isBookInUserReadList($bookId, $userId): bool
-    {
-        $readList = User::find($userId)->bookLists->where('type', 'readlist')->first()->id ?? null;
-        return DB::table('book_list_books')
-            ->where('book_list_id', $readList)
-            ->where('book_id', $bookId)
-            ->exists();
-    }
-
-    public function isBookInUserFavoriteList($bookId, $userId): bool
-    {
-        $favoriteList = User::find($userId)->bookLists()->where('type', 'favorite')->first()->id ?? null;
-        return DB::table('book_list_books')
-            ->where('book_list_id', $favoriteList)
-            ->where('book_id', $bookId)
-            ->exists();
-    }
-
-    public function getAllBooks($sort = 1, $genre = null, $language = null, $author = null, $ageRating = null, $fromDate = null, $toDate = null, $minMembers = null, $maxMembers = null)
-    {
-        $query = Book::query()->where('is_published', true);
-
-        if ($genre) {
-            $query->whereHas('genres', function ($query) use ($genre) {
-                $query->where('name', $genre);
-            });
-        }
-
-        if ($author) {
-            $query->where('author_name', 'like', '%' . $author . '%');
-        }
-
-        if ($language) {
-            $query->where('language', $language);
-        }
-
-        if ($ageRating) {
-            $query->where('age_rating', $ageRating);
-        }
-
-        if ($minMembers) {
-            $query->where('members', '>=', $minMembers);
-        }
-
-        if ($maxMembers) {
-            $query->where('members', '>=', $maxMembers);
-        }
-
-        if ($fromDate) {
-            $query->where('published_at', '>=', $fromDate);
-        }
-
-        if ($toDate) {
-            $query->where('published_at', '<=', $toDate);
-        }
-
-        if ($sort == 2){
-            $query->orderBy('members', 'desc');
-        } else if ($sort == 3) {
-            $query->orderBy('favorite_members', 'desc');
-        } else if ($sort == 4) {
-            $query->orderByRaw('COALESCE(CAST(favorite_members AS FLOAT) / NULLIF(CAST(members AS FLOAT), 0), 0) DESC');
-        } else if ($sort == 5){
-            $query->orderBy('published_at', 'desc');
-        } else {
-            $query->orderByRaw('COALESCE(community_rating, 0) DESC');
-        }
-
-        return $query->get();
     }
 
     public function getBook($id): Book
@@ -138,6 +67,116 @@ class BookService
     public function getBookTags($bookId)
     {
         return Book::find($bookId)->tags;
+    }
+
+    public function isBookInUserReadList($bookId, $userId): bool
+    {
+        $readList = User::find($userId)->bookLists->where('type', 'readlist')->first()->id ?? null;
+        return DB::table('book_list_books')
+            ->where('book_list_id', $readList)
+            ->where('book_id', $bookId)
+            ->exists();
+    }
+
+    public function isBookInUserFavoriteList($bookId, $userId): bool
+    {
+        $favoriteList = User::find($userId)->bookLists()->where('type', 'favorite')->first()->id ?? null;
+        return DB::table('book_list_books')
+            ->where('book_list_id', $favoriteList)
+            ->where('book_id', $bookId)
+            ->exists();
+    }
+
+    public function getAllBooks(BookSearchParams $params)
+    {
+        $query = Book::query()->where('is_published', true);
+
+        $this->applyFilters($query, $params);
+
+        $this->applySorting($query, $params->sort);
+
+        return $query->get();
+    }
+
+    private function applyFilters($query, $params): void
+    {
+        $filters = [
+            'genre' => 'filterByGenre',
+            'author' => 'filterByAuthor',
+            'language' => 'filterByLanguage',
+            'ageRating' => 'filterByAgeRating',
+            'minMembers' => 'filterByMinMembers',
+            'maxMembers' => 'filterByMaxMembers',
+            'fromDate' => 'filterByFromDate',
+            'toDate' => 'filterByToDate',
+        ];
+
+        foreach ($filters as $key => $method) {
+            if (!empty($params->$key)) {
+                $this->$method($query, $params->$key);
+            }
+        }
+    }
+
+    private function applySorting($query, $sort): void
+    {
+        $sortOptions = [
+            2 => ['members', 'desc'],
+            3 => ['favorite_members', 'desc'],
+            4 => ['raw', 'COALESCE(CAST(favorite_members AS FLOAT) / NULLIF(CAST(members AS FLOAT), 0), 0) DESC'],
+            5 => ['published_at', 'desc'],
+            1 => ['raw', 'COALESCE(community_rating, 0) DESC']
+        ];
+
+        $sortType = $sortOptions[$sort] ?? $sortOptions[1];
+
+        if ($sortType[0] === 'raw') {
+            $query->orderByRaw($sortType[1]);
+        } else {
+            $query->orderBy($sortType[0], $sortType[1]);
+        }
+    }
+
+    private function filterByGenre($query, $genre): void
+    {
+        $query->whereHas('genres', function ($q) use ($genre) {
+            $q->where('name', $genre);
+        });
+    }
+
+    private function filterByAuthor($query, $author): void
+    {
+        $query->where('author_name', 'like', '%' . $author . '%');
+    }
+
+    private function filterByLanguage($query, $language): void
+    {
+        $query->where('language', $language);
+    }
+
+    private function filterByAgeRating($query, $ageRating): void
+    {
+        $query->where('age_rating', $ageRating);
+    }
+
+    private function filterByMinMembers($query, $minMembers): void
+    {
+        $query->where('members', '>=', $minMembers);
+    }
+
+    private function filterByMaxMembers($query, $maxMembers): void
+    {
+        $query->where('members', '<=', $maxMembers);
+    }
+
+    private function filterByFromDate($query, $fromDate): void
+    {
+        $query->where('published_at', '>=', $fromDate);
+    }
+
+    private function filterByToDate($query, $toDate): void
+    {
+        $query->where('published_at', '<=', $toDate);
     }
 
     public function setBookRating(Request $request, $bookId): void

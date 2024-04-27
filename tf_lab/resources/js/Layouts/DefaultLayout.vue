@@ -71,7 +71,7 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                        <DropdownLink :href="`/users/${$page.props.auth.user.id}`"> Profile </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>
@@ -92,7 +92,6 @@ const showingNavigationDropdown = ref(false);
 
                     </div>
                 </div>
-
             </nav>
 
             <!-- Page Heading -->

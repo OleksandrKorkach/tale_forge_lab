@@ -1,5 +1,8 @@
 <script setup>
 
+import FavoriteMembers from "@/Components/BookStat/FavoriteMembers.vue";
+import Members from "@/Components/BookStat/Members.vue";
+import CommunityRating from "@/Components/BookStat/CommunityRating.vue";
 </script>
 
 <template>
@@ -16,24 +19,10 @@
                 star
             </div>
         </button>
-        <div class="text-yellow-500 gap-0.5 flex items-center ">
-            <div class="font-semibold">{{book.community_rating}}</div>
-            <div class="material-symbols-outlined text-xl font-semibold">
-                star
-            </div>
-        </div>
-        <div class="flex items-center gap-1">
-            <div class="font-semibold">{{ book.members }}</div>
-            <div class="material-symbols-outlined text-3xl">
-                groups
-            </div>
-        </div>
-        <div class="flex items-center text-red-500 gap-0.5">
-            <div class="font-semibold">{{ book.favorite_members}}</div>
-            <div class="material-symbols-outlined text-xl font-semibold">
-                heart_plus
-            </div>
-        </div>
+
+        <CommunityRating :book="book" />
+        <Members :book="book" />
+        <FavoriteMembers :book="book" />
     </div>
 </template>
 

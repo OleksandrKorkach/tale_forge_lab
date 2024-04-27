@@ -15,13 +15,16 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
     <DefaultLayout>
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
-                <div class="p-8 bg-white shadow-2xl ">
-                    <div class="flex">
+                <div class="p-8 bg-white shadow-2xl relative">
+                    <div v-if="book.ai_generated" class="absolute top-5 right-5 h-[100px] w-[100px] rotate-[-15deg]">
+                        <img src="/images/qualitychecknoback2.png" alt="" >
+                    </div>
+                    <div class="flex ">
                         <div class="p-2 w-4/12 flex flex-col">
                             <div v-if="!book.url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
                                 <img src="/images/tf_lab_logo.webp"  alt="Logo" />
                             </div>
-                            <div v-else class=" ">
+                            <div v-else class="">
                                 <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
                             </div>
                             <Link :href="`/books/${book.id}/pages/1`" class="mt-2 bg-gradient-to-l from-red-600 to-gray-800 hover:from-red-700 hover:to-black text-white font-semibold flex justify-center rounded-lg p-2">
