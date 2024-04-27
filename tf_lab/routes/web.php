@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')->middleware('auth');
 Route::get('/users/{user}/readlist', [UserController::class, 'showReadList'])->name('users.readlist.show');
 Route::get('/users/{user}/favorite', [UserController::class, 'showFavoriteList'])->name('users.readlist.show');
+Route::get('/users/{user}/topics', [UserController::class, 'userTopics']);
+Route::get('/users/{user}/reviews', [UserController::class, 'userReviews']);
 
 Route::prefix('books')->group(function () {
     Route::get('', [BookController::class, 'index'])->name('books.index');
@@ -48,6 +50,7 @@ Route::post('comments/{commentId}/likes', [BookCommentController::class, 'toggle
 Route::post('favorite-books/toggle', [BookListController::class, 'toggleFavorite'])->name('favorite-books.toggle');
 Route::post('booklist/toggle', [BookListController::class, 'toggleReadList'])->name('booklist.toggle');
 //Route::post('custom-list/{name}/toggle', [BookListController::class, 'toggleCustomList'])->name('customlist.toggle');
+
 Route::get('lists/{listId}', [BookListController::class, 'show'])->name('lists.show');
 Route::delete('lists/{listId}/remove-book/{bookId}', [BookListController::class, 'toggleBook'])->name('lists.books.remove');
 Route::get('lists/export/{listId}', [BookListController::class, 'export']);

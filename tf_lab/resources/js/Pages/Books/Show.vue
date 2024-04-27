@@ -1,5 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import Comments from './partial/Comments.vue';
@@ -15,7 +14,7 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
     <DefaultLayout>
         <div class="py-12">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
-                <div class="p-8 bg-white shadow-2xl relative">
+                <div class="p-8 bg-white shadow-2xl relative rounded-lg">
                     <div v-if="book.ai_generated" class="absolute top-5 right-5 h-[100px] w-[100px] rotate-[-15deg]">
                         <img src="/images/qualitychecknoback2.png" alt="" >
                     </div>

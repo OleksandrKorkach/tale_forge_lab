@@ -76,6 +76,7 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                                 </div>
                             </div>
 
+
                             <div class="w-full py-3">
                                 <div class="mx-[5px] bg-gray-300 h-[1px]"></div>
                             </div>

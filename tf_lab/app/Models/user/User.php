@@ -3,9 +3,11 @@
 namespace App\Models\user;
 
 use App\Models\book\Book;
+use App\Models\book\BookComment;
 use App\Models\book\BookCommentLike;
 use App\Models\book\BookList;
 use App\Models\book\BookRating;
+use App\Models\community\Topic;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,7 +24,6 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
 
     protected $hidden = [
         'password',
@@ -55,6 +56,16 @@ class User extends Authenticatable
     public function bookLists(): HasMany
     {
         return $this->hasMany(BookList::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(BookComment::class);
+    }
+
+    public function topics(): HasMany
+    {
+        return $this->hasMany(Topic::class);
     }
 
 }

@@ -1,3 +1,8 @@
+<script setup>
+
+import {Link} from "@inertiajs/vue3";
+</script>
+
 <template>
     <div class="">
         <template v-for="(comment, index) in comments" :key="index">
@@ -5,7 +10,7 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <div class="text-lg font-semibold text-center">{{comment.username}}</div>
-                        <button class="text-sm text-gray-600 text-center">@{{comment.username}}</button>
+                        <Link :href="`/users/${comment.user_id}`" class="text-sm text-gray-600 text-center">@{{comment.username}}</Link>
                     </div>
                     <div class="text-sm"> Today, {{ comment.created_at.slice(11,16) }}</div>
                 </div>
@@ -41,6 +46,7 @@
 </template>
 
 <script>
+
 export default {
     props: {
         comments: Array,
