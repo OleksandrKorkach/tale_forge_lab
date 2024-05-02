@@ -13,9 +13,5 @@ class BookEditorService
         $path = $file->store('public/books');
 
         return str_replace('public/', '/storage/', $path);
-//        $pdf = new Fpdi();
-//        $pdf->
-//        $pdf = $request->file('pdf');
-//        $bookId = $request->input('bookId');
     }
 }

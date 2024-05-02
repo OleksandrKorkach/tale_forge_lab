@@ -13,10 +13,13 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                     <div class="flex items-center justify-between">
                         <div>Hello World! Book id: {{ book.id }}</div>
                         <div>
-                            <input type="file" ref="fileInput">
-                            <button @click="submit" class="py-1 px-2 text-white bg-gray-900 hover:bg-gray-700 rounded-md">
+                            <input v-if="!book.pdf_url" type="file" ref="fileInput">
+                            <button v-if="!book.pdf_url" @click="submit" class="py-1 px-2 text-white bg-gray-900 hover:bg-gray-700 rounded-md">
                                 Load PDF
                             </button>
+                            <div v-else>
+                                You already downloaded book!
+                            </div>
                         </div>
                     </div>
                 </div>

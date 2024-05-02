@@ -58,7 +58,7 @@ Route::post('/lab/publish-book/{book}', [LabController::class, 'publishBook'])->
 Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.book.edit');
 Route::get('/editor/{bookId}', [BookEditorController::class, 'show']);
 Route::post('/editor/{bookId}/save', [BookEditorController::class, 'save']);
-Route::get('/view-pdf', [BookEditorController::class, 'viewPdf']);
+Route::get('/view-book/{bookId}', [BookEditorController::class, 'viewPdf']);
 
 
 Route::post('ratings/{book}', [BookController::class, 'setBookRating'])->name('books.set-rating');

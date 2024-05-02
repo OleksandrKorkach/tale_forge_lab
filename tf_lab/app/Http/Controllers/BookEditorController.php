@@ -30,21 +30,16 @@ class BookEditorController extends Controller
     public function save(Request $request, $bookId)
     {
         $path = $this->bookEditorService->loadPdfBook($request, $bookId);
-        return $path;
+        $book = Book::find($bookId);
+        $book->pdf_url = $path;
+        $book->save();
     }
 
-    public function viewPdf()
+    public function viewPdf($bookId): Response
     {
-        return Inertia::render('Editor/Reader');
-//        $path = 'public/books/' . 'HUm7x8iMEqbGXTk67pX39BOtV8DDHF0hT99f52eU.pdf';
-//
-//        if (!Storage::disk('local')->exists($path)) {
-//            abort(404);
-//        }
-//
-//        $file = Storage::disk('local')->get($path);
-//        $type = Storage::disk('local')->mimeType($path);
-//
-//        return response($file, 200)->header('Content-Type', $type);
+        $book = Book::find($bookId);
+        return Inertia::render('Editor/Reader', [
+            'pdfUrl' => $book->pdf_url,
+        ]);
     }
 }

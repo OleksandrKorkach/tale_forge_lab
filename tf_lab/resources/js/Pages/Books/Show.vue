@@ -26,7 +26,7 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                             <div v-else class="">
                                 <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
                             </div>
-                            <Link :href="`/books/${book.id}/pages/1`" class="mt-2 bg-gradient-to-l from-red-600 to-gray-800 hover:from-red-700 hover:to-black text-white font-semibold flex justify-center rounded-lg p-2">
+                            <Link :href="`/view-book/${book.id}`" class="mt-2 bg-gradient-to-l from-red-600 to-gray-800 hover:from-red-700 hover:to-black text-white font-semibold flex justify-center rounded-lg p-2">
                                 Read from first page
                             </Link>
                             <div v-if="$page.props.auth.user" class="flex mt-1 rounded-lg font-semibold">
