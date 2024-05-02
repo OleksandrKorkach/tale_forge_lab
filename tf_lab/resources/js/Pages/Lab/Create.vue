@@ -18,8 +18,8 @@ import {Cropper} from "vue-advanced-cropper";
                         <form @submit.prevent="store" class="gap-2 flex flex-col">
                             <div>
                                 <div class="flex gap-2">
-                                    <div v-if="form.url" class="h-[300px] w-[250px]">
-                                        <img :src="`${form.url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
+                                    <div v-if="form.image_url" class="h-[300px] w-[250px]">
+                                        <img :src="`${form.image_url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
                                     </div>
                                     <div>
                                         <InputLabel>
@@ -154,7 +154,7 @@ export default {
                 language: null,
                 age_rating: null,
                 genres: [],
-                url: null,
+                image_url: null,
             }),
             genresInFirstBlock: [],
             genresInSecondBlock: this.allGenres,
@@ -164,8 +164,8 @@ export default {
         loadImage(event) {
             const file = event.target.files[0];
             if (file) {
-                if (this.form.url) {
-                    URL.revokeObjectURL(this.form.url);
+                if (this.form.image_url) {
+                    URL.revokeObjectURL(this.form.image_url);
                 }
 
                 const reader = new FileReader();
@@ -174,7 +174,7 @@ export default {
                     this.showImageModal = true;
                 };
                 reader.readAsDataURL(file);
-                this.form.url = URL.createObjectURL(file);
+                this.form.image_url = URL.createObjectURL(file);
             }
         },
         change({ coordinates, canvas }) {
@@ -182,13 +182,13 @@ export default {
             console.log(new Date());
             canvas.toBlob(blob => {
                 this.croppedImageBlob = blob;
-                this.form.url = URL.createObjectURL(blob);
+                this.form.image_url = URL.createObjectURL(blob);
             }, 'image/jpeg');
         },
         applyImage() {
             this.showImageModal = false;
             if (this.croppedImageBlob) {
-                this.form.url = URL.createObjectURL(this.croppedImageBlob);
+                this.form.image_url = URL.createObjectURL(this.croppedImageBlob);
             }
         },
         store() {

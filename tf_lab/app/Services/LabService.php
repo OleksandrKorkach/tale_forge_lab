@@ -27,7 +27,7 @@ class LabService
             'title' => $request['title'],
             'description' => $request['description'],
             'quote' => $request['quote'],
-            'url' => !empty($publicPath) ? $publicPath : null,
+            'image_url' => !empty($publicPath) ? $publicPath : null,
             'language' => $request['language'],
             'age_rating' => $request['age_rating'],
             'author_name' => User::find(Auth::id())->name,
@@ -50,7 +50,7 @@ class LabService
             'quote' => $request->input('quote'),
             'language' => $request->input('language'),
             'age_rating' => $request->input('age_rating'),
-            'url' => $publicPath ?? $book->url,
+            'image_url' => $publicPath ?? $book->image_url,
         ];
 
         $book->update($updateData);

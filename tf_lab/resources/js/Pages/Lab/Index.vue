@@ -25,9 +25,9 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                         <template v-for="book in books" >
                             <div class="w-[25%] relative border-white border-4 bg-gray-200">
                                 <Link :href="`/lab/edit/${book.id}`">
-                                    <NoBookImage v-if="!book.url" />
+                                    <NoBookImage v-if="!book.image_url" />
                                     <div v-else class=" ">
-                                        <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
+                                        <img :src="`${book.image_url}`"  alt="Logo" style="width: 100%; height: auto;" />
                                     </div>
                                 </Link>
                                 <div class="p-2 flex justify-center text-center text-sm">

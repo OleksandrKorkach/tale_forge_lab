@@ -6,6 +6,7 @@ use App\Models\community\Club;
 use App\Models\community\Topic;
 use App\Models\community\TopicComment;
 use App\Models\user\User;
+use App\Services\CommunityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,10 +17,17 @@ use Inertia\Response;
 
 class CommunityController extends Controller
 {
+    private CommunityService $communityService;
+
+    public function __construct(CommunityService $communityService)
+    {
+        $this->communityService = $communityService;
+    }
+
     public function index(): Response
     {
-        $clubs = Club::orderBy('members', 'desc')->get();
-        $topics = Topic::orderBy('number_of_replies', 'desc')->get();
+        $clubs = $this->communityService->getAllClubs();
+        $topics = $this->communityService->getAllTopics();
         return Inertia::render('Community/Index', [
             'clubs' => $clubs,
             'topics' => $topics,
@@ -28,7 +36,7 @@ class CommunityController extends Controller
 
     public function clubs(): Response
     {
-        $clubs = Club::orderBy('members', 'desc')->get();
+        $clubs = $this->communityService->getAllClubs();
         return Inertia::render('Community/Clubs/Index', [
             'clubs' => $clubs,
         ]);
@@ -36,7 +44,7 @@ class CommunityController extends Controller
 
     public function showClub($clubId): Response
     {
-        $club = Club::find($clubId);
+        $club = $this->communityService->getClub($clubId);
         return Inertia::render('Community/Clubs/Show', [
             'club' => $club,
             'members' => $club->users,
@@ -45,7 +53,7 @@ class CommunityController extends Controller
 
     public function topics(): Response
     {
-        $topics = Topic::all();
+        $topics = $this->communityService->getAllTopics();
         return Inertia::render('Community/Topics/Index', [
             'topics' => $topics,
         ]);
@@ -53,9 +61,7 @@ class CommunityController extends Controller
 
     public function showTopic($topicId): Response
     {
-        $topic = Topic::with(['comments' => function ($query) {
-            $query->whereNull('comment_id')->with('replies');
-        }])->findOrFail($topicId);
+        $topic = $this->communityService->getTopic($topicId);
 
         return Inertia::render('Community/Topics/Show', [
             'topic' => $topic,
@@ -66,26 +72,15 @@ class CommunityController extends Controller
 
     public function storeComment(Request $request, $topicId): void
     {
-        $comment = new TopicComment([
-            'content' => $request['content'],
-            'author_name' => User::find(Auth::id())->name,
-            'user_id' => auth()->id(),
-            'topic_id' => $topicId,
-            'comment_id' => $request->comment_id,
-        ]);
-        $comment->save();
-        Topic::query()->find($topicId)->increment('number_of_replies');
+        $this->communityService->storeTopicComment($request, $topicId);
     }
 
     public function deleteComment($commentId): void
     {
-        $comment = TopicComment::find($commentId);
-        $topic = Topic::find($comment->topic_id);
-        $topic->decrement('number_of_replies', $comment->replies->count() + 1);
-        TopicComment::destroy($commentId);
+        $this->communityService->deleteTopicComment($commentId);
     }
 
-    public function testTopic()
+    public function testTopic(): void
     {
         $lastTopic = Topic::query()->orderBy('id', 'desc')->first();
         Topic::create([
@@ -98,7 +93,7 @@ class CommunityController extends Controller
 
     public function deleteTopic($topicId): RedirectResponse
     {
-        Topic::destroy($topicId);
+        $this->communityService->deleteTopic($topicId);
         return Redirect::to('/community');
     }
 

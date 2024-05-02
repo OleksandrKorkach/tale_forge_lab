@@ -2,8 +2,6 @@
 
 namespace App\Models\book;
 
-use App\Models\book\enums\BookLanguages;
-use App\Models\page\Page;
 use App\Models\user\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,9 +25,10 @@ class Book extends Model
         'quote',
         'pages',
         'age_rating',
-        'url',
+        'image_url',
         'user_id',
         'ai_generated',
+        'pdf_url',
     ];
 
     public function ratings(): HasMany

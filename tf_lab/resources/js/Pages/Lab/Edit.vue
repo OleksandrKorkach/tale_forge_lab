@@ -76,8 +76,8 @@ import {Cropper} from "vue-advanced-cropper";
                             </div>
 
                             <div class="flex gap-4 mb-2">
-                                <div v-if="book.url" class="h-[300px] w-[250px]">
-                                    <img :src="`${book.url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
+                                <div v-if="book.image_url" class="h-[300px] w-[250px]">
+                                    <img :src="`${book.image_url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
                                 </div>
                                 <div>
                                     <InputLabel>
@@ -195,8 +195,8 @@ export default {
         loadImage(event) {
             const file = event.target.files[0];
             if (file) {
-                if (this.book.url) {
-                    URL.revokeObjectURL(this.book.url);
+                if (this.book.image_url) {
+                    URL.revokeObjectURL(this.book.image_url);
                 }
 
                 const reader = new FileReader();
@@ -205,7 +205,7 @@ export default {
                     this.showImageModal = true;
                 };
                 reader.readAsDataURL(file);
-                this.book.url = URL.createObjectURL(file);
+                this.book.image_url = URL.createObjectURL(file);
             }
         },
         change({ coordinates, canvas }) {
@@ -213,13 +213,13 @@ export default {
             console.log(new Date());
             canvas.toBlob(blob => {
                 this.croppedImageBlob = blob;
-                this.book.url = URL.createObjectURL(blob);
+                this.book.image_url = URL.createObjectURL(blob);
             }, 'image/jpeg');
         },
         applyImage() {
             this.showImageModal = false;
             if (this.croppedImageBlob) {
-                this.book.url = URL.createObjectURL(this.croppedImageBlob);
+                this.book.image_url = URL.createObjectURL(this.croppedImageBlob);
             }
         },
     },

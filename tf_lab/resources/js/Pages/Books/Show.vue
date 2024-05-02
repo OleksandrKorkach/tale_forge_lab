@@ -20,11 +20,11 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                     </div>
                     <div class="flex ">
                         <div class="p-2 w-4/12 flex flex-col">
-                            <div v-if="!book.url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
+                            <div v-if="!book.image_url" class="bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300 items-center justify-center">
                                 <img src="/images/tf_lab_logo.webp"  alt="Logo" />
                             </div>
                             <div v-else class="">
-                                <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
+                                <img :src="`${book.image_url}`"  alt="Logo" style="width: 100%; height: auto;" />
                             </div>
                             <Link :href="`/view-book/${book.id}`" class="mt-2 bg-gradient-to-l from-red-600 to-gray-800 hover:from-red-700 hover:to-black text-white font-semibold flex justify-center rounded-lg p-2">
                                 Read from first page

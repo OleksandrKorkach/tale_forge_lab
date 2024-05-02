@@ -67,9 +67,9 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                                             </div>
                                             <Link :href="`/books/${book.id}`"
                                                   class="flex bg-gradient-to-b from-blue-500 via-orange-500 to-yellow-300">
-                                                <NoBookImage v-if="!book.url" />
+                                                <NoBookImage v-if="!book.image_url" />
                                                 <div v-else>
-                                                    <img :src="`${book.url}`"  alt="Logo" style="width: 100%; height: auto;" />
+                                                    <img :src="`${book.image_url}`"  alt="Logo" style="width: 100%; height: auto;" />
                                                 </div>
                                             </Link>
                                         </div>

@@ -19,7 +19,6 @@ class BookEditorController extends Controller
         $this->bookEditorService = $bookEditorService;
     }
 
-
     public function show($bookId): Response
     {
         return Inertia::render('Editor/Show', [
@@ -27,12 +26,9 @@ class BookEditorController extends Controller
         ]);
     }
 
-    public function save(Request $request, $bookId)
+    public function save(Request $request, $bookId): void
     {
-        $path = $this->bookEditorService->loadPdfBook($request, $bookId);
-        $book = Book::find($bookId);
-        $book->pdf_url = $path;
-        $book->save();
+        $this->bookEditorService->loadPdfBook($request, $bookId);
     }
 
     public function viewPdf($bookId): Response

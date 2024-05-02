@@ -22,8 +22,8 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                     <div class="flex flex-col gap-1">
                         <template v-for="(book, index) in list.books" :key="index">
                             <div  class="flex border-black border-1 bg-gray-200">
-                                <div v-if="book.url" class="flex items-center w-[25%]">
-                                    <img :src="`${book.url}`" alt="">
+                                <div v-if="book.image_url" class="flex items-center w-[25%]">
+                                    <img :src="`${book.image_url}`" alt="">
                                 </div>
                               <Link v-else :href="`/books/${book.id}`" class="flex items-center w-[25%]">
                                   <NoBookImage />
