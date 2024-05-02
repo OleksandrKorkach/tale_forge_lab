@@ -22,11 +22,6 @@ class Topic extends Model
         'club_id',
     ];
 
-    public function users(): HasMany
-    {
-        return $this->hasMany(User::class);
-    }
-
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class);

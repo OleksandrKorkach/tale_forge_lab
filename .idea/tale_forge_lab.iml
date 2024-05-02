@@ -133,6 +133,9 @@
       <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/markbaker/complex" />
       <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/markbaker/matrix" />
       <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/phpoffice/phpspreadsheet" />
+      <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/setasign/fpdi" />
+      <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/setasign/fpdi-tcpdf" />
+      <excludeFolder url="file://$MODULE_DIR$/tf_lab/vendor/tecnickcom/tcpdf" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

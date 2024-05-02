@@ -39,6 +39,7 @@ class CommunityController extends Controller
         $club = Club::find($clubId);
         return Inertia::render('Community/Clubs/Show', [
             'club' => $club,
+            'members' => $club->users,
         ]);
     }
 

@@ -24,6 +24,7 @@ import NoBookImage from "@/Components/NoBookImage.vue";
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
                 <div class="p-8 bg-white shadow sm:rounded-lg min-h-screen">
                     <div class="flex">
+                        <!--    Sort and filters    -->
                         <div class="flex flex-col w-2/12 items-center justify-between border-r-[1px] border-gray-400 pr-2">
                             <SortOptions :selected-sort="sort" @sort-changed="setSort" />
                         </div>
@@ -93,9 +94,10 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                                     {{ genre.name }}
                                 </button>
                             </div>
-
                         </div>
                     </div>
+
+                    <!--          Books          -->
                     <div class="flex flex-wrap mt-6">
                         <template v-for="book in books" :key="book.id">
                             <div class="w-[25%] border-white border-4 bg-gray-100">

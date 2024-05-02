@@ -36,10 +36,6 @@ class LabService
 
         $this->syncGenres($book, $request->input('genres', []));
 
-        Page::create([
-            'book_id' => $book->id,
-            'sequence' => 1,
-        ]);
     }
 
     public function updateBook(Request $request, $bookId): void

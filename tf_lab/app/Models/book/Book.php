@@ -32,11 +32,6 @@ class Book extends Model
         'ai_generated',
     ];
 
-    public function pages(): HasMany
-    {
-        return $this->hasMany(Page::class);
-    }
-
     public function ratings(): HasMany
     {
         return $this->hasMany(BookRating::class);

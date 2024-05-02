@@ -28,28 +28,9 @@ return new class extends Migration
 
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
+            $table->boolean('ai_generated')->default(false);
 
             $table->foreign('user_id')->references('id')->on('users');
-        });
-
-        Schema::create('pages', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('book_id');
-            $table->integer('sequence')->default(0);
-            $table->timestamps();
-
-            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
-        });
-
-        Schema::create('page_blocks', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('page_id');
-            $table->string('block_type');
-            $table->text('content')->nullable();
-            $table->integer('sequence')->default(0);
-            $table->timestamps();
-
-            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
 
         Schema::create('book_comments', function (Blueprint $table) {
@@ -102,19 +83,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-//        Schema::create('favorite_books', function (Blueprint $table) {
-//            $table->id();
-//            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-//            $table->foreignId('book_id')->constrained()->onDelete('cascade');
-//            $table->timestamps();
-//        });
-//
-//        Schema::create('user_booklist', function (Blueprint $table) {
-//            $table->id();
-//            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-//            $table->foreignId('book_id')->constrained()->onDelete('cascade');
-//            $table->timestamps();
-//        });
 
         Schema::create('book_ratings', function (Blueprint $table) {
             $table->id();
@@ -135,8 +103,6 @@ return new class extends Migration
         Schema::dropIfExists('book_genres');
         Schema::dropIfExists('book_comment_likes');
         Schema::dropIfExists('book_comments');
-        Schema::dropIfExists('page_blocks');
-        Schema::dropIfExists('pages');
         Schema::dropIfExists('books');
     }
 };

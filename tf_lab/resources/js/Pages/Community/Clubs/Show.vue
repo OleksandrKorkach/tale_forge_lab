@@ -17,6 +17,12 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                     <div>
                         {{ club.members }}
                     </div>
+                    <div>
+                        Members:
+                    </div>
+                    <template v-for="member in members">
+                        <div>{{ member.name }}</div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -28,6 +34,7 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 export default {
     props: {
         club: Object,
+        members: Array,
     },
 }
 </script>

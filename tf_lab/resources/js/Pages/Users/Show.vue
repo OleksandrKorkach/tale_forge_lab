@@ -85,7 +85,7 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                     <!-- Отзывы и рекомендации -->
                     <div class="p-4">
                         <h2 class="font-semibold mb-2">Latest Reviews</h2>
-                        <div class="space-y-4">
+                        <div class="space-y-2">
                             <div v-if="!latestReviews.length > 0" class="text-gray-500 px-3">
                                 User has no reviews yet.
                             </div>

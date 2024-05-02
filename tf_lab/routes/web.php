@@ -2,12 +2,10 @@
 
 use App\Http\Controllers\BookCommentController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookEditorController;
 use App\Http\Controllers\BookListController;
-use App\Http\Controllers\CommunityClubController;
 use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LabController;
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
@@ -40,16 +38,12 @@ Route::prefix('books')->group(function () {
     Route::get('{book}', [BookController::class, 'show'])->name('books.show');
 });
 Route::post('books/{book}/comments', [BookCommentController::class, 'store'])->name('books.comment.store');
-Route::get('books/{book}/pages/{page}', [PageController::class, 'show'])->name('pages.show');
-Route::delete('/blocks/{block}', [PageController::class, 'destroyBlock'])->name('pages.blocks.destroy');
-Route::post('books/{book}/page/{page}', [PageController::class, 'storeBlock'])->name('pages.blocks.store');
 
 Route::delete('comments/{commentId}/delete', [BookCommentController::class, 'delete'])->name('books.comment.delete');
 Route::post('comments/{commentId}/likes', [BookCommentController::class, 'toggleLike'])->name('comments.store');
 
 Route::post('favorite-books/toggle', [BookListController::class, 'toggleFavorite'])->name('favorite-books.toggle');
 Route::post('booklist/toggle', [BookListController::class, 'toggleReadList'])->name('booklist.toggle');
-//Route::post('custom-list/{name}/toggle', [BookListController::class, 'toggleCustomList'])->name('customlist.toggle');
 
 Route::get('lists/{listId}', [BookListController::class, 'show'])->name('lists.show');
 Route::delete('lists/{listId}/remove-book/{bookId}', [BookListController::class, 'toggleBook'])->name('lists.books.remove');
@@ -62,6 +56,10 @@ Route::post('/lab/update-book/{book}', [LabController::class, 'updateBook'])->na
 Route::delete('/lab/delete-book/{bookId}', [LabController::class, 'deleteBook'])->name('lab.book.delete');
 Route::post('/lab/publish-book/{book}', [LabController::class, 'publishBook'])->name('lab.book.publish');
 Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.book.edit');
+Route::get('/editor/{bookId}', [BookEditorController::class, 'show']);
+Route::post('/editor/{bookId}/save', [BookEditorController::class, 'save']);
+Route::get('/view-pdf', [BookEditorController::class, 'viewPdf']);
+
 
 Route::post('ratings/{book}', [BookController::class, 'setBookRating'])->name('books.set-rating');
 Route::delete('ratings/{bookId}', [BookController::class, 'deleteBookRating'])->name('books.delete-rating');

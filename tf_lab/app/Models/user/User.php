@@ -7,6 +7,7 @@ use App\Models\book\BookComment;
 use App\Models\book\BookCommentLike;
 use App\Models\book\BookList;
 use App\Models\book\BookRating;
+use App\Models\community\Club;
 use App\Models\community\Topic;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -67,5 +68,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Topic::class);
     }
+
+    public function createdClubs(): HasMany
+    {
+        return $this->hasMany(Club::class);
+    }
+
+    public function clubs(): BelongsToMany
+    {
+        return $this->belongsToMany(Club::class, 'club_user', 'user_id', 'club_id');
+    }
+
 
 }

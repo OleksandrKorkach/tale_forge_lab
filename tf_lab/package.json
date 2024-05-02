@@ -18,6 +18,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "pdfjs-dist": "^4.2.67",
         "vue-advanced-cropper": "^2.8.8",
         "vuedraggable": "^4.1.0"
     }
