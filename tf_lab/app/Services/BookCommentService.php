@@ -15,6 +15,8 @@ class BookCommentService
         $book = Book::with(['comments' => function ($query) use ($request) {
             $sortType = $request->query('sort', 1);
 
+            $query->with('user');
+
             if ($sortType == 2) {
                 $query->selectRaw('book_comments.*, (number_of_likes + number_of_dislikes) as total_likes')
                     ->orderBy('total_likes', 'desc');

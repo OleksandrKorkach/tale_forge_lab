@@ -28,6 +28,10 @@ class BookService
         $comments = $this->bookCommentService->getBookComments($request, $id);
         $genres = $this->getBookGenres($id);
         $tags = $this->getBookTags($id);
+        $lists = Auth::id() ? User::find(Auth::id())->booklists()->where('type', 'custom')->get() : null;
+        $inLists = Auth::id() ? User::find(Auth::id())->booklists()->where('type', 'custom')->whereHas('books', function ($query) use ($id) {
+            $query->where('book_id', $id);
+        })->pluck('id')->toArray() : [];
 
         $isFavourite = Auth::id() ? $this->isBookInUserFavoriteList($id, Auth::id()) : null;
         $inList = Auth::id() ? $this->isBookInUserReadList($id, Auth::id()) : null;
@@ -41,6 +45,8 @@ class BookService
             'comments' => $comments,
             'genres' => $genres,
             'tags' => $tags,
+            'lists' => $lists,
+            'inLists' => $inLists,
             'isFavourite' => $isFavourite,
             'likedComments' => $likedComments,
             'dislikedComments' => $dislikedComments,

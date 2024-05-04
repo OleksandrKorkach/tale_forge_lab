@@ -6,6 +6,7 @@ use App\Models\book\BookGenre;
 use App\Models\book\BookList;
 use App\Models\user\User;
 use App\Services\UserService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,7 +18,6 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
-
 
     public function show($userId): Response
     {
@@ -46,7 +46,7 @@ class UserController extends Controller
             })
             ->values();
 
-        $bookLists = $user->bookLists()->withCount('books')->get();
+        $bookLists = $user->bookLists()->withCount('books')->take(6)->get();
 
         $userReviews = $user->reviews();
         $userReviewsCount = $userReviews->count();
@@ -65,6 +65,47 @@ class UserController extends Controller
             'reviewsCount' => $userReviewsCount,
             'publishedBooks' => $publishedBooks,
 
+        ]);
+    }
+
+    public function updateAvatar(Request $request, $userId): void
+    {
+        $user = User::find($userId);
+
+        $publicPath = $this->saveImage($request->file('image'));
+
+        if ($publicPath) {
+            $user->avatar_url = $publicPath;
+        }
+        $user->save();
+    }
+
+    private function saveImage($image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        $path = $image->store('public/avatars');
+        return str_replace('public/', '/storage/', $path);
+    }
+
+    public function createList(Request $request, $userId): void
+    {
+        BookList::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => $userId,
+            'type' => 'custom',
+        ]);
+    }
+
+    public function userBookLists($userId)
+    {
+        $user = $this->userService->getUser($userId);
+        return Inertia::render('Users/ShowLists', [
+            'user' => $user,
+            'lists' => $user->bookLists,
         ]);
     }
 

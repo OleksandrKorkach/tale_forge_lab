@@ -89,5 +89,12 @@ class LabService
         $book->genres()->sync($genreIds);
     }
 
+    public function removeBookImage($bookId): void
+    {
+        $book = Book::find($bookId);
+        $book->image_url = null;
+        $book->save();
+    }
+
 
 }

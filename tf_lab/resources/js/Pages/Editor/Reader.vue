@@ -3,7 +3,7 @@
         <div class="flex justify-center items-center gap-2 p-4">
             <PrimaryButton @click="goToPrevPage">Prev</PrimaryButton>
             <div>
-                <span>{{ internalCurrentPage }} / {{ internalTotalPages }}</span>
+                <span><input id="pageInput" @input="goToPage" class="py-1 w-[80px] rounded-lg" type="text" :value="`${internalCurrentPage}`"> / {{ internalTotalPages }}</span>
             </div>
             <PrimaryButton @click="goToNextPage">Next</PrimaryButton>
             <div class="flex items-center justify-end ml-4 gap-2">
@@ -109,6 +109,20 @@ export default {
             if (this.internalCurrentPage < this.internalTotalPages) {
                 this.internalCurrentPage++;
                 this.renderPage(this.internalCurrentPage);
+            }
+        },
+        goToPage() {
+            const pageValue = document.getElementById('pageInput');
+            let pageNumber = parseInt(pageValue.value, 10);
+            if (pageNumber > this.internalTotalPages) {
+                pageNumber = this.internalTotalPages;
+                pageValue.value = this.internalTotalPages;
+            }
+            if (!isNaN(pageNumber)) {
+                this.internalCurrentPage = pageNumber;
+                this.renderPage(pageNumber);
+            } else {
+                console.error('Invalid page number:', pageValue.value);
             }
         },
         setScale(value) {

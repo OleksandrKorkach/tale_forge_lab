@@ -1,5 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
@@ -16,6 +15,39 @@ import {Cropper} from "vue-advanced-cropper";
                 <div class="p-8 bg-white shadow sm:rounded-lg">
                     <div class="">
                         <form id="editForm" @submit.prevent="updateBook" class="gap-2 flex flex-col">
+                            <div class="flex gap-4 mb-2">
+                                <div v-if="book.image_url" class="h-[300px] w-[250px]">
+                                    <img :src="`${book.image_url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
+                                </div>
+                                <div>
+                                    <InputLabel>
+                                        Upload photo
+                                    </InputLabel>
+                                    <input type="file" @change="loadImage" accept="image/*">
+                                    <Modal :show="showImageModal" @close="showImageModal = false" max-width="cropper" max-height="cropper">
+                                        <div>
+                                            <cropper
+                                                v-if="image"
+                                                style="height: 500px; width: 500px; background: #DDD;"
+                                                class="cropper"
+                                                :src="image"
+                                                :stencil-props="{
+                                              aspectRatio: 1
+                                            }"
+                                                @change="change"
+                                            ></cropper>
+                                        </div>
+                                        <div class="p-2 flex justify-end">
+                                            <button @click="applyImage" class="bg-gray-900 text-white rounded-lg px-3 py-2" >
+                                                Apply
+                                            </button>
+                                        </div>
+                                    </Modal>
+                                    <button type="button" v-if="book.image_url" @click="removePhoto" class="hover:bg-red-600 bg-red-500 text-white px-2 py-1 rounded-md">
+                                        Delete image
+                                    </button>
+                                </div>
+                            </div>
                             <div class="flex gap-4">
                                 <div class="w-1/2">
                                     <InputLabel class="pl-0.5">Title</InputLabel>
@@ -49,7 +81,7 @@ import {Cropper} from "vue-advanced-cropper";
                             </div>
                             <div>
                                 <InputLabel class="pl-0.5">Genres</InputLabel>
-                                <div class="flex  rounded-lg border-black border-2">
+                                <div class="flex rounded-lg border-black border-2">
                                     <div class="w-1/2">
                                         <Draggable class="flex flex-wrap items-start gap-1 h-[100%] border-r-[1px] border-black p-1" v-model="genresInFirstBlock" group="genres">
                                             <template #item="{ element }">
@@ -60,7 +92,7 @@ import {Cropper} from "vue-advanced-cropper";
                                         </Draggable>
                                     </div>
                                     <div class="w-1/2">
-                                        <Draggable class="flex gap-1 flex-wrap items-start h-[100%] border-l-[1px] border-black p-1" v-model="genresInSecondBlock" group="genres">
+                                        <Draggable class="flex flex-wrap items-start gap-1 h-[100%] border-l-[1px] border-black p-1" v-model="genresInSecondBlock" group="genres">
                                             <template #item="{ element }">
                                                 <div class="py-2 px-4 rounded shadow" :style="{ backgroundColor: element.background_color, color: element.text_color }">
                                                     {{ element.name }}
@@ -75,51 +107,23 @@ import {Cropper} from "vue-advanced-cropper";
                                 <textarea class="w-full min-h-[150px]" v-model="form.description" type="text" placeholder="Description" />
                             </div>
 
-                            <div class="flex gap-4 mb-2">
-                                <div v-if="book.image_url" class="h-[300px] w-[250px]">
-                                    <img :src="`${book.image_url}`" alt="You have no logo yet!" style="object-fit: contain; width: 100%; height: 100%;">
-                                </div>
-                                <div>
-                                    <InputLabel>
-                                        Upload photo
-                                    </InputLabel>
-                                    <input type="file" @change="loadImage" accept="image/*">
-                                    <Modal :show="showImageModal" @close="showImageModal = false" max-width="cropper" max-height="cropper">
-                                        <div>
-                                            <cropper
-                                                v-if="image"
-                                                style="height: 500px; width: 500px; background: #DDD;"
-                                                class="cropper"
-                                                :src="image"
-                                                :stencil-props="{
-                                              aspectRatio: 5/6
-                                            }"
-                                                @change="change"
-                                            ></cropper>
-                                        </div>
-                                        <div class="p-2 flex justify-end">
-                                            <button @click="applyImage" class="bg-gray-900 text-white rounded-lg px-3 py-2" >
-                                                Apply
-                                            </button>
-                                        </div>
-
-                                    </Modal>
-                                </div>
-                            </div>
                         </form>
                         <div class="flex justify-between gap-1.5 mt-2">
-                            <Link :href="`/books/${book.id}`" class="w-1/4 text-center btn-indigo hover:bg-green-600 bg-green-500 text-white px-2 py-1 rounded-md">
+                            <Link :href="`/books/${book.id}`" class="w-full text-center btn-indigo hover:bg-green-600 bg-green-500 text-white px-2 py-1 rounded-md">
                                 Watch book page
                             </Link>
-                            <button form="editForm" type="submit" class="w-1/4 btn-indigo hover:bg-gray-700 bg-gray-900 text-white px-2 py-1 rounded-md">
+                            <button form="editForm" type="submit" class="w-full btn-indigo hover:bg-gray-700 bg-gray-900 text-white px-2 py-1 rounded-md">
                                 Update
                             </button>
-                            <button @click="destroyBook" class="w-1/4 btn-indigo hover:bg-red-600 bg-red-500 text-white px-2 py-1 rounded-md">
+                            <button @click="destroyBook" class="w-full btn-indigo hover:bg-red-600 bg-red-500 text-white px-2 py-1 rounded-md">
                                 Delete
                             </button>
-                            <button @click="publishBook"
+                            <Link :href="`/editor/${book.id}`" class="w-full text-center btn-indigo hover:bg-gray-700 bg-gray-900 text-white px-2 py-1 rounded-md">
+                                Upload book
+                            </Link>
+                            <button v-if="book.pdf_url" @click="publishBook"
                                     :class="`${ book.is_published ? 'bg-purple-500 hover:bg-purple-600' : 'bg-green-500 hover:bg-green-600'}`"
-                                    class="w-1/4 btn-indigo text-white px-2 py-1 rounded-md">
+                                    class="w-full btn-indigo text-white px-2 py-1 rounded-md">
                                 {{ book.is_published === true ? 'Make book private' : 'Publish book' }}
                             </button>
                         </div>
@@ -221,6 +225,11 @@ export default {
             if (this.croppedImageBlob) {
                 this.book.image_url = URL.createObjectURL(this.croppedImageBlob);
             }
+        },
+        removePhoto() {
+            this.$inertia.delete(`/lab/remove-image/${this.book.id}`, {
+                preserveScroll: true,
+            });
         },
     },
 }

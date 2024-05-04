@@ -31,6 +31,11 @@ class BookEditorController extends Controller
         $this->bookEditorService->loadPdfBook($request, $bookId);
     }
 
+    public function delete($bookId): void
+    {
+        $this->bookEditorService->deletePdfBook($bookId);
+    }
+
     public function viewPdf($bookId): Response
     {
         $book = Book::find($bookId);

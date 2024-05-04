@@ -6,6 +6,8 @@ import CommentsHeader from "@/Pages/Books/partial/CommentsHeader.vue";
 import BookInfo from "@/Pages/Books/partial/BookInfo.vue";
 import RatingStat from "@/Pages/Books/partial/RatingStat.vue";
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 </script>
 
 <template>
@@ -49,6 +51,30 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
                                     </div>
                                 </button>
                             </div>
+                            <button v-if="$page.props.auth.user" class="font-semibold flex mt-1 justify-center items-center border-4 border-black rounded-lg">
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent leading-4 font-semibold rounded-md bg-white focus:outline-none transition ease-in-out duration-150">
+                                                Add book to your list
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <template v-for="list in lists">
+                                            <button @click="addToList(list.id)" class="p-2 flex w-full items-center gap-1">
+                                                <div>
+                                                    {{list.name}}
+                                                </div>
+                                                <div v-if="inLists.includes(list.id)" class="material-symbols-outlined font-semibold">
+                                                    done
+                                                </div>
+                                            </button>
+                                        </template>
+                                    </template>
+                                </Dropdown>
+                            </button>
                             <RatingStat :book="book" :rating="rating"/>
                         </div>
                         <div class="w-8/12 py-2 px-2">
@@ -71,6 +97,8 @@ import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 export default {
     props: {
         book: Object,
+        lists: Array,
+        inLists: Array,
         comments: Array,
         genres: Array,
         tags: Array,
@@ -82,12 +110,21 @@ export default {
     },
     methods: {
         toggleFavorite() {
-            this.$inertia.post(`/favorite-books/toggle`, { book_id: this.book.id });
+            this.$inertia.post(`/favorite-books/toggle`, { book_id: this.book.id }, {
+                preserveScroll: true
+            });
             this.isFavourite = !this.isFavourite;
         },
         toggleInList() {
-            this.$inertia.post(`/booklist/toggle`, { book_id: this.book.id });
+            this.$inertia.post(`/booklist/toggle`, { book_id: this.book.id }, {
+                preserveScroll: true
+            });
             this.isFavourite = !this.isFavourite;
+        },
+        addToList(listId) {
+            this.$inertia.post(`/lists/${listId}/books/${this.book.id}`, {}, {
+                preserveScroll: true,
+            });
         },
     }
 }

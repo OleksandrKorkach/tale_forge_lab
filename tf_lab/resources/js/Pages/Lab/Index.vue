@@ -38,7 +38,7 @@ import NoBookImage from "@/Components/NoBookImage.vue";
                                         public
                                     </span>
                                 </button>
-                                <button @click="publishBook(book.id)" v-else class="absolute flex items-center justify-center top-2 right-2 rounded" title="private" >
+                                <button v-else-if="book.pdf_url" @click="publishBook(book.id)" class="absolute flex items-center justify-center top-2 right-2 rounded" title="private" >
                                     <span class="material-symbols-outlined text-[40px] text-red-500 hover:text-red-600">
                                         vpn_lock
                                     </span>

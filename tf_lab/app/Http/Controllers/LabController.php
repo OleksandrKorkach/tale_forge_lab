@@ -56,6 +56,11 @@ class LabController extends Controller
         return redirect(route('lab.index'));
     }
 
+    public function removeImage($bookId): void
+    {
+        $this->labService->removeBookImage($bookId);
+    }
+
     public function editBook($bookId): Response
     {
         $book = $this->bookService->getBook($bookId);

@@ -30,6 +30,19 @@ class BookListController extends Controller
         ]);
     }
 
+    public function update(Request $request, $listId): void
+    {
+        $list = BookList::find($listId);
+        $list->name = $request->name;
+        $list->description = $request->description;
+        $list->save();
+    }
+
+    public function deleteList($listId): void
+    {
+        BookList::destroy($listId);
+    }
+
     public function toggleBook($listId, $bookId): void
     {
         $this->bookListService->toggleBookInList($bookId, $listId);
@@ -43,6 +56,11 @@ class BookListController extends Controller
     public function toggleReadList(Request $request): void
     {
         $this->bookListService->toggleUserList($request, 'readlist', 'readlist');
+    }
+
+    public function addToList($listId, $bookId): void
+    {
+        $this->bookListService->addToList($listId, $bookId);
     }
 
     public function export($listId)

@@ -44,6 +44,12 @@ class BookListService
         }
     }
 
+    public function addToList($listId, $bookId): void
+    {
+        $book = Book::find($bookId);
+        BookList::find($listId)->books()->toggle($book);
+    }
+
     public function incrementMembers($listType, $book): void
     {
         if ($listType == 'readlist') {

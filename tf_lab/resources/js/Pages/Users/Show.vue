@@ -2,19 +2,52 @@
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 import {Link} from "@inertiajs/vue3";
 import NoBookImage from "@/Components/NoBookImage.vue";
+import Modal from "@/Components/Modal.vue";
 </script>
 
 <template>
     <DefaultLayout>
         <div class="py-8">
             <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white shadow sm:rounded-lg">
+                <div class="bg-white shadow sm:rounded-lg p-2">
                     <!-- Объединенный Профиль и Статистика -->
                     <div class="p-6">
-                        <div class="flex items-center">
-                            <div class="flex-none mr-6">
-                                <img src="/images/vano.jpg" alt="Avatar" class="w-40 h-40 rounded-full">
+                        <div class="flex items-center gap-2">
+                            <div class="relative w-40 h-40 rounded-full overflow-hidden group">
+                                <template v-if="user.id === $page.props.auth.user.id">
+                                    <img v-if="user.avatar_url" :src="`${user.avatar_url}`" alt="Avatar" class="w-full h-full object-cover group-hover:brightness-50 transition duration-300">
+                                    <img v-else src="/images/sobaka_daun.jpg" alt="Avatar" class="w-full h-full object-cover group-hover:brightness-50 transition duration-300">
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                        <button class="w-full h-full material-symbols-outlined text-white text-3xl" @click="triggerFileInput">
+                                            edit
+                                        </button>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <img v-if="user.avatar_url" :src="`${user.avatar_url}`" alt="Avatar" class="w-full h-full transition duration-300">
+                                    <img v-else src="/images/sobaka_daun.jpg" alt="Avatar" class="w-full h-full transition duration-300">
+                                </template>
                             </div>
+                            <input type="file" class="hidden" ref="fileInput" @change="loadImage" accept="image/*">
+                            <Modal :show="showImageModal" @close="showImageModal = false" max-width="cropper" max-height="cropper">
+                                <div>
+                                    <cropper
+                                        v-if="image"
+                                        style="height: 500px; width: 500px; background: #DDD;"
+                                        class="cropper"
+                                        :src="image"
+                                        :stencil-props="{
+                                              aspectRatio: 1
+                                            }"
+                                        @change="change"
+                                    ></cropper>
+                                </div>
+                                <div class="p-2 flex justify-end">
+                                    <button @click="applyImage" class="bg-gray-900 text-white rounded-lg px-3 py-2" >
+                                        Apply
+                                    </button>
+                                </div>
+                            </Modal>
                             <div class="flex-grow">
                                 <h1 class="text-2xl font-bold">{{ user.name }}'s profile</h1>
                                 <p class="text-gray-600">Book enthusiast, critic, and collector.</p>
@@ -113,7 +146,10 @@ import NoBookImage from "@/Components/NoBookImage.vue";
 
                     <!-- Активные списки -->
                     <div class="p-4">
-                        <h2 class="font-semibold mb-2">Book Lists</h2>
+                        <div class="mb-2 flex items-center justify-between">
+                            <h2 class="font-semibold">Book Lists</h2>
+                            <Link :href="`/users/${user.id}/lists`" class="font-semibold text-gray-500 text-sm">All Lists</Link>
+                        </div>
                         <div class="grid grid-cols-3 gap-2">
                             <template v-for="list in lists">
                                 <Link :href="`/lists/${list.id}`" class="bg-gray-100 p-2 rounded-lg">
@@ -130,6 +166,10 @@ import NoBookImage from "@/Components/NoBookImage.vue";
 </template>
 
 <script>
+import {Link} from "@inertiajs/vue3";
+import {Cropper} from "vue-advanced-cropper";
+import 'vue-advanced-cropper/dist/style.css';
+
 export default {
     props: {
         user: Object,
@@ -140,6 +180,61 @@ export default {
         latestReviews: Array,
         reviewsCount: Number,
         publishedBooks: Array,
+    },
+    components: {
+        Cropper
+    },
+    data() {
+        return {
+            image: null,
+            croppedImageBlob: null,
+            showImageModal: false,
+            form: this.$inertia.form({
+                image: null,
+            }),
+        }
+    },
+    mounted() {
+        this.fileInput = this.$refs.fileInput;
+    },
+    methods: {
+        triggerFileInput() {
+            this.fileInput.click();
+        },
+        loadImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (this.user.avatar_url) {
+                    URL.revokeObjectURL(this.user.avatar_url);
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.image = e.target.result;
+                    this.showImageModal = true;
+                };
+                reader.readAsDataURL(file);
+                this.user.avatar_url = URL.createObjectURL(file);
+            }
+        },
+        change({ coordinates, canvas }) {
+            console.log(coordinates, canvas);
+            console.log(new Date());
+            canvas.toBlob(blob => {
+                this.croppedImageBlob = blob;
+                this.user.avatar_url = URL.createObjectURL(blob);
+            }, 'image/jpeg');
+        },
+        applyImage() {
+            this.showImageModal = false;
+            if (this.croppedImageBlob) {
+                this.user.avatar_url = URL.createObjectURL(this.croppedImageBlob);
+            }
+            if (this.croppedImageBlob) {
+                this.form.image = this.croppedImageBlob;
+            }
+            this.form.post(`/users/${this.user.id}/avatar`);
+        },
     }
 }
 </script>

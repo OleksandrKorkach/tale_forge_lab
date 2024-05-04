@@ -32,6 +32,9 @@ Route::get('/users/{user}/readlist', [UserController::class, 'showReadList'])->n
 Route::get('/users/{user}/favorite', [UserController::class, 'showFavoriteList'])->name('users.readlist.show');
 Route::get('/users/{user}/topics', [UserController::class, 'userTopics']);
 Route::get('/users/{user}/reviews', [UserController::class, 'userReviews']);
+Route::get('/users/{user}/lists', [UserController::class, 'userBookLists']);
+Route::post('/users/{user}/lists', [UserController::class, 'createList']);
+Route::post('/users/{userId}/avatar', [UserController::class, 'updateAvatar']);
 
 Route::prefix('books')->group(function () {
     Route::get('', [BookController::class, 'index'])->name('books.index');
@@ -46,18 +49,24 @@ Route::post('favorite-books/toggle', [BookListController::class, 'toggleFavorite
 Route::post('booklist/toggle', [BookListController::class, 'toggleReadList'])->name('booklist.toggle');
 
 Route::get('lists/{listId}', [BookListController::class, 'show'])->name('lists.show');
+Route::post('lists/{listId}/books/{bookId}', [BookListController::class, 'addToList']);
+Route::put('lists/{listId}', [BookListController::class, 'update'])->name('lists.update');
 Route::delete('lists/{listId}/remove-book/{bookId}', [BookListController::class, 'toggleBook'])->name('lists.books.remove');
 Route::get('lists/export/{listId}', [BookListController::class, 'export']);
+Route::delete('lists/{listId}', [BookListController::class, 'deleteList'])->name('lists.delete');
 
 Route::get('/lab', [LabController::class, 'index'])->name('lab.index');
 Route::get('/lab/create', [LabController::class, 'create'])->name('lab.create');
 Route::post('/lab/store-book', [LabController::class, 'storeBook'])->name('lab.book.store');
 Route::post('/lab/update-book/{book}', [LabController::class, 'updateBook'])->name('lab.book.update');
 Route::delete('/lab/delete-book/{bookId}', [LabController::class, 'deleteBook'])->name('lab.book.delete');
+Route::delete('/lab/remove-image/{bookId}', [LabController::class, 'removeImage'])->name('lab.image.remove');
 Route::post('/lab/publish-book/{book}', [LabController::class, 'publishBook'])->name('lab.book.publish');
 Route::get('/lab/edit/{book}', [LabController::class, 'editBook'])->name('lab.book.edit');
+
 Route::get('/editor/{bookId}', [BookEditorController::class, 'show']);
 Route::post('/editor/{bookId}/save', [BookEditorController::class, 'save']);
+Route::delete('/editor/{bookId}/delete', [BookEditorController::class, 'delete']);
 Route::get('/view-book/{bookId}', [BookEditorController::class, 'viewPdf']);
 
 
