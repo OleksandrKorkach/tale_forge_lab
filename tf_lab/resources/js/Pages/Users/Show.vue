@@ -81,7 +81,7 @@ import Modal from "@/Components/Modal.vue";
                     <!-- User's books -->
                     <div class="p-4">
                         <h2 class="font-semibold mb-2">{{ user.name }}'s published books</h2>
-                        <div class="space-y-4">
+                        <div class="space-y-2">
                             <div v-if="!publishedBooks.length > 0" class="text-gray-500 px-3">
                                 The user has not written any books yet.
                             </div>
@@ -123,7 +123,7 @@ import Modal from "@/Components/Modal.vue";
                                 User has no reviews yet.
                             </div>
                             <template v-for="review in latestReviews">
-                                <Link :href="`/books/${review.book.id}`" class="flex p-3 bg-gray-100 rounded-lg">
+                                <Link :href="`/books/${review.book.id}`" class="flex p-3 bg-gray-100 rounded-lg transition duration-100 hover:bg-gray-200">
                                     <p>"{{ review.content }}" - <strong>{{ review.book.title }}</strong></p>
                                 </Link>
                             </template>
@@ -136,7 +136,7 @@ import Modal from "@/Components/Modal.vue";
                         <div class="flex flex-wrap gap-1">
                             <template v-for="(genre, index) in genres" :key="index">
                                 <Link :href="`/books?genre=${genre.name}`"
-                                      class="py-1 px-3 rounded-lg flex items-center font-semibold"
+                                      class="hover:scale-[102%] py-1 px-3 rounded-lg flex items-center font-semibold"
                                       :style="`background-color: ${genre.background_color}; color: ${genre.text_color}`">
                                     {{ genre.name }}
                                 </Link>
@@ -148,11 +148,11 @@ import Modal from "@/Components/Modal.vue";
                     <div class="p-4">
                         <div class="mb-2 flex items-center justify-between">
                             <h2 class="font-semibold">Book Lists</h2>
-                            <Link :href="`/users/${user.id}/lists`" class="font-semibold text-gray-500 text-sm">All Lists</Link>
+                            <Link :href="`/users/${user.id}/lists`" class="font-semibold text-gray-500 hover:text-gray-700 text-sm">All Lists</Link>
                         </div>
                         <div class="grid grid-cols-3 gap-2">
                             <template v-for="list in lists">
-                                <Link :href="`/lists/${list.id}`" class="bg-gray-100 p-2 rounded-lg">
+                                <Link :href="`/lists/${list.id}`" class="bg-gray-100 p-2 rounded-lg transition duration-100 hover:bg-gray-200">
                                     <h3 class="font-semibold">{{ list.name }}</h3>
                                     <p class="text-gray-500">{{ list.books_count }} books</p>
                                 </Link>
